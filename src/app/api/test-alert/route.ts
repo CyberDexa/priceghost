@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { sendPriceDropEmail } from "@/lib/email/send";
 
-// Test endpoint to create a sample alert (development only)
+// Test endpoint to create a sample alert and send email
 export async function POST() {
-  if (process.env.NODE_ENV !== "development") {
-    return NextResponse.json({ error: "Not available in production" }, { status: 403 });
-  }
-
   const supabase = await createClient();
 
   const {
@@ -20,7 +17,7 @@ export async function POST() {
   // Get a product to create alert for
   const { data: product } = await supabase
     .from("products")
-    .select("id, name, current_price")
+    .select("id, name, current_price, url, image_url")
     .eq("user_id", user.id)
     .limit(1)
     .single();
@@ -53,5 +50,19 @@ export async function POST() {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ success: true, alert });
+  // Send the email
+  const emailResult = await sendPriceDropEmail({
+    to: user.email!,
+    productName: product.name,
+    productUrl: product.url,
+    oldPrice: oldPrice,
+    newPrice: newPrice,
+    imageUrl: product.image_url || undefined,
+  });
+
+  return NextResponse.json({ 
+    success: true, 
+    alert,
+    email: emailResult 
+  });
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { formatPrice, getCurrencySymbol } from '@/lib/currency';
 import {
   BarChart3,
   TrendingDown,
@@ -82,6 +83,7 @@ export function AnalyticsClient() {
   const [recentDrops, setRecentDrops] = useState<RecentDrop[]>([]);
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
+  const [currency, setCurrency] = useState<string>('USD');
 
   useEffect(() => {
     fetchAnalytics();
@@ -94,6 +96,17 @@ export function AnalyticsClient() {
     if (!user) return;
 
     try {
+      // Get user preferences for currency
+      const { data: preferences } = await supabase
+        .from('user_preferences')
+        .select('currency')
+        .eq('user_id', user.id)
+        .single();
+      
+      if (preferences?.currency) {
+        setCurrency(preferences.currency);
+      }
+
       // Get products
       const { data: products } = await supabase
         .from('products')
@@ -277,7 +290,7 @@ export function AnalyticsClient() {
         />
         <StatCard
           title="Total Savings"
-          value={`$${(analytics?.totalSavings || 0).toFixed(2)}`}
+          value={formatPrice(analytics?.totalSavings || 0, currency)}
           icon={DollarSign}
           description={
             <span className={savingsChange >= 0 ? 'text-green-400' : 'text-red-400'}>
@@ -315,7 +328,7 @@ export function AnalyticsClient() {
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
                 <XAxis dataKey="date" stroke="#71717a" fontSize={12} />
-                <YAxis stroke="#71717a" fontSize={12} tickFormatter={(v) => `$${v}`} />
+                <YAxis stroke="#71717a" fontSize={12} tickFormatter={(v) => `${getCurrencySymbol(currency)}${v}`} />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: '#18181b',
@@ -323,7 +336,7 @@ export function AnalyticsClient() {
                     borderRadius: '8px',
                   }}
                   labelStyle={{ color: '#fff' }}
-                  formatter={(value) => [`$${Number(value || 0).toFixed(2)}`, 'Avg Price']}
+                  formatter={(value) => [formatPrice(Number(value || 0), currency), 'Avg Price']}
                 />
                 <Area
                   type="monotone"
@@ -441,10 +454,10 @@ export function AnalyticsClient() {
                     <p className="text-white font-medium truncate">{drop.name}</p>
                     <div className="flex items-center gap-2 text-sm">
                       <span className="text-zinc-500 line-through">
-                        ${drop.original_price.toFixed(2)}
+                        {formatPrice(drop.original_price, currency)}
                       </span>
                       <span className="text-green-400 font-medium">
-                        ${drop.current_price.toFixed(2)}
+                        {formatPrice(drop.current_price, currency)}
                       </span>
                     </div>
                   </div>

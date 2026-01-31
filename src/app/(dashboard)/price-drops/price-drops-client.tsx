@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
+import { formatPrice } from "@/lib/currency";
 import {
   TrendingDown,
   ExternalLink,
@@ -28,9 +29,10 @@ interface Product {
 interface PriceDropsClientProps {
   products: Product[];
   totalSavings: number;
+  currency?: string;
 }
 
-export function PriceDropsClient({ products, totalSavings }: PriceDropsClientProps) {
+export function PriceDropsClient({ products, totalSavings, currency = "USD" }: PriceDropsClientProps) {
   return (
     <div className="p-6 max-w-6xl mx-auto">
       {/* Header */}
@@ -55,7 +57,7 @@ export function PriceDropsClient({ products, totalSavings }: PriceDropsClientPro
               <div>
                 <p className="text-sm text-emerald-600 font-medium">Total Savings</p>
                 <p className="text-2xl font-bold text-emerald-700">
-                  ${totalSavings.toFixed(2)}
+                  {formatPrice(totalSavings, currency)}
                 </p>
               </div>
             </div>
@@ -178,13 +180,13 @@ export function PriceDropsClient({ products, totalSavings }: PriceDropsClientPro
                           {/* Prices */}
                           <div className="flex items-center gap-3 mt-3">
                             <span className="text-2xl font-bold text-emerald-600">
-                              ${product.current_price.toFixed(2)}
+                              {formatPrice(product.current_price, currency)}
                             </span>
                             <span className="text-lg text-gray-400 line-through">
-                              ${product.original_price.toFixed(2)}
+                              {formatPrice(product.original_price, currency)}
                             </span>
                             <span className="text-sm text-emerald-600 font-medium">
-                              Save ${savings.toFixed(2)}
+                              Save {formatPrice(savings, currency)}
                             </span>
                           </div>
 

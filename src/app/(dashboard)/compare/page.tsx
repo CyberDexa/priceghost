@@ -13,12 +13,21 @@ export default async function ComparePage() {
     redirect("/login");
   }
 
-  // Get all products grouped by similar names
-  const { data: products } = await supabase
-    .from("products")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("name", { ascending: true });
+  // Get products and currency preference in parallel
+  const [productsResult, preferencesResult] = await Promise.all([
+    supabase
+      .from("products")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("name", { ascending: true }),
+    supabase
+      .from("user_preferences")
+      .select("currency")
+      .eq("user_id", user.id)
+      .single(),
+  ]);
 
-  return <CompareClient products={products || []} />;
+  const currency = preferencesResult.data?.currency || "USD";
+
+  return <CompareClient products={productsResult.data || []} currency={currency} />;
 }

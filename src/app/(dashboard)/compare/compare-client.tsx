@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { formatPrice, getCurrencySymbol } from "@/lib/currency";
 import {
   Search,
   ArrowUpDown,
@@ -30,9 +31,10 @@ interface Product {
 
 interface CompareClientProps {
   products: Product[];
+  currency?: string;
 }
 
-export function CompareClient({ products }: CompareClientProps) {
+export function CompareClient({ products, currency = "USD" }: CompareClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<"price" | "name" | "retailer">("price");
@@ -167,7 +169,7 @@ export function CompareClient({ products }: CompareClientProps) {
                                 {product.retailer}
                               </span>
                               <span className="text-sm font-semibold text-gray-900">
-                                ${product.current_price?.toFixed(2) || "N/A"}
+                                {product.current_price ? formatPrice(product.current_price, currency) : "N/A"}
                               </span>
                             </div>
                           </div>
@@ -228,8 +230,7 @@ export function CompareClient({ products }: CompareClientProps) {
                             Best Deal Found!
                           </p>
                           <p className="text-sm text-emerald-600">
-                            {bestDeal.retailer} has the lowest price at $
-                            {bestDeal.current_price?.toFixed(2)}
+                            {bestDeal.retailer} has the lowest price at {bestDeal.current_price ? formatPrice(bestDeal.current_price, currency) : "N/A"}
                           </p>
                         </div>
                       </div>
@@ -323,7 +324,7 @@ export function CompareClient({ products }: CompareClientProps) {
                                       : "text-gray-900"
                                   }`}
                                 >
-                                  ${product.current_price?.toFixed(2) || "N/A"}
+                                  {product.current_price ? formatPrice(product.current_price, currency) : "N/A"}
                                 </span>
                                 {isBest && (
                                   <span className="ml-2 text-xs bg-emerald-500 text-white px-2 py-0.5 rounded">
@@ -332,7 +333,7 @@ export function CompareClient({ products }: CompareClientProps) {
                                 )}
                               </td>
                               <td className="py-3 px-4 text-right text-sm text-gray-500">
-                                ${product.lowest_price?.toFixed(2) || "—"}
+                                {product.lowest_price ? formatPrice(product.lowest_price, currency) : "—"}
                               </td>
                               <td className="py-3 px-4 text-center">
                                 <div className="flex items-center justify-center gap-2">
@@ -364,20 +365,20 @@ export function CompareClient({ products }: CompareClientProps) {
                   {comparedProducts.length > 1 && (
                     <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                       <p className="text-sm text-gray-600">
-                        <strong>Price Range:</strong> $
+                        <strong>Price Range:</strong> {getCurrencySymbol(currency)}
                         {Math.min(
                           ...comparedProducts
                             .filter((p) => p.current_price)
                             .map((p) => p.current_price!)
                         ).toFixed(2)}{" "}
-                        - $
+                        - {getCurrencySymbol(currency)}
                         {Math.max(
                           ...comparedProducts
                             .filter((p) => p.current_price)
                             .map((p) => p.current_price!)
                         ).toFixed(2)}
                         <span className="ml-2 text-emerald-600">
-                          (Potential savings: $
+                          (Potential savings: {getCurrencySymbol(currency)}
                           {(
                             Math.max(
                               ...comparedProducts

@@ -322,7 +322,7 @@ export function DashboardClient({ products, stats, currency = "USD" }: Dashboard
                     className="h-5 w-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
                   />
                 </div>
-                <ProductCard product={product} />
+                <ProductCard product={product} currency={currency} />
               </div>
             ))}
           </div>

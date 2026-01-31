@@ -19,6 +19,7 @@ import { createClient } from "@/lib/supabase/client";
 
 interface ProductCardProps {
   product: Product;
+  currency?: string;
 }
 
 const retailerLogos: Record<string, string> = {
@@ -31,7 +32,7 @@ const retailerLogos: Record<string, string> = {
   unknown: "🛍️",
 };
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, currency = "USD" }: ProductCardProps) {
   const [showMenu, setShowMenu] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
@@ -45,7 +46,7 @@ export function ProductCard({ product }: ProductCardProps) {
     if (price === null) return "N/A";
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: product.currency || "USD",
+      currency: product.currency || currency,
     }).format(price);
   };
 

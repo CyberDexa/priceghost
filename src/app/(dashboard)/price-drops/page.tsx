@@ -13,17 +13,26 @@ export default async function PriceDropsPage() {
     redirect("/login");
   }
 
-  // Fetch products with price drops (current < original)
-  const { data: products } = await supabase
-    .from("products")
-    .select("*")
-    .eq("user_id", user.id)
-    .not("original_price", "is", null)
-    .not("current_price", "is", null)
-    .order("created_at", { ascending: false });
+  // Fetch products with price drops and currency preference in parallel
+  const [productsResult, preferencesResult] = await Promise.all([
+    supabase
+      .from("products")
+      .select("*")
+      .eq("user_id", user.id)
+      .not("original_price", "is", null)
+      .not("current_price", "is", null)
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("user_preferences")
+      .select("currency")
+      .eq("user_id", user.id)
+      .single(),
+  ]);
+
+  const currency = preferencesResult.data?.currency || "USD";
 
   // Filter products where current price is lower than original
-  const priceDrops = (products || []).filter(
+  const priceDrops = (productsResult.data || []).filter(
     (p) => p.current_price && p.original_price && p.current_price < p.original_price
   );
 
@@ -36,6 +45,7 @@ export default async function PriceDropsPage() {
     <PriceDropsClient
       products={priceDrops}
       totalSavings={totalSavings}
+      currency={currency}
     />
   );
 }
