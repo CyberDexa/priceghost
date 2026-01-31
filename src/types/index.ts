@@ -69,7 +69,20 @@ export type Retailer =
   | 'target' 
   | 'ebay' 
   | 'costco'
-  | 'unknown';
+  | 'aliexpress'
+  | 'temu'
+  | 'newegg'
+  | 'homedepot'
+  | 'lowes'
+  | 'wayfair'
+  | 'etsy'
+  | 'argos'
+  | 'currys'
+  | 'johnlewis'
+  | 'ao'
+  | 'very'
+  | 'unknown'
+  | string; // Allow any retailer name for generic sites
 
 export interface PriceChange {
   product_id: string;

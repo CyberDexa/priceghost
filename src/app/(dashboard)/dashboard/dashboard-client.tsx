@@ -154,7 +154,7 @@ export function DashboardClient({ products, stats, currency = "USD" }: Dashboard
   };
 
   // Bulk actions
-  const handleBulkAction = async (action: "delete" | "refresh" | "activate" | "deactivate") => {
+  const handleBulkAction = async (action: "delete" | "refresh" | "activate" | "deactivate" | "rescrape") => {
     if (selectedProducts.size === 0) return;
 
     setBulkLoading(true);
@@ -243,6 +243,15 @@ export function DashboardClient({ products, stats, currency = "USD" }: Dashboard
             >
               <RefreshCw className={`h-4 w-4 mr-1 ${bulkLoading ? "animate-spin" : ""}`} />
               Refresh Prices
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleBulkAction("rescrape")}
+              disabled={bulkLoading}
+              title="Re-scrape product details (name, image, retailer)"
+            >
+              🔄 Fix Details
             </Button>
             <Button
               variant="outline"

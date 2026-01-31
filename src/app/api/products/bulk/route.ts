@@ -122,6 +122,84 @@ export async function POST(request: Request) {
         }
         break;
 
+      case "rescrape":
+        // Full re-scrape - update all product details including name, image, retailer
+        for (const product of products) {
+          try {
+            const scrapeResult = await scrapeProduct(product.url);
+
+            if (scrapeResult.success) {
+              const updateData: Record<string, unknown> = {
+                last_checked: new Date().toISOString(),
+              };
+
+              // Update name if we got a better one (not generic)
+              if (scrapeResult.name && 
+                  scrapeResult.name !== "Product" && 
+                  scrapeResult.name.length > 3 &&
+                  (product.name === "Product" || !product.name)) {
+                updateData.name = scrapeResult.name;
+              }
+
+              // Update image if we got one and product doesn't have one
+              if (scrapeResult.image_url && (!product.image_url || product.image_url === "")) {
+                updateData.image_url = scrapeResult.image_url;
+              }
+
+              // Update retailer if we detected one and current is unknown
+              if (scrapeResult.retailer && 
+                  scrapeResult.retailer !== "unknown" && 
+                  (product.retailer === "unknown" || product.retailer === "Unknown")) {
+                updateData.retailer = scrapeResult.retailer;
+              }
+
+              // Update currency if detected
+              if (scrapeResult.currency) {
+                updateData.currency = scrapeResult.currency;
+              }
+
+              // Update price if available
+              if (scrapeResult.price) {
+                updateData.current_price = scrapeResult.price;
+                
+                if (!product.original_price) {
+                  updateData.original_price = scrapeResult.price;
+                }
+                if (!product.lowest_price || scrapeResult.price < product.lowest_price) {
+                  updateData.lowest_price = scrapeResult.price;
+                }
+                if (!product.highest_price || scrapeResult.price > product.highest_price) {
+                  updateData.highest_price = scrapeResult.price;
+                }
+
+                // Add to price history
+                await supabase.from("price_history").insert({
+                  product_id: product.id,
+                  price: scrapeResult.price,
+                });
+              }
+
+              await supabase
+                .from("products")
+                .update(updateData)
+                .eq("id", product.id);
+
+              results.success++;
+            } else {
+              results.failed++;
+              results.errors.push(
+                `${product.name || product.url}: ${scrapeResult.error || "Failed to scrape"}`
+              );
+            }
+          } catch (error) {
+            results.failed++;
+            results.errors.push(
+              `${product.name || product.url}: ${error instanceof Error ? error.message : "Unknown error"}`
+            );
+          }
+        }
+        break;
+
       case "activate":
         // Bulk activate
         const { error: activateError } = await supabase

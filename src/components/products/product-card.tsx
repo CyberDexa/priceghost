@@ -29,6 +29,18 @@ const retailerLogos: Record<string, string> = {
   target: "🎯",
   ebay: "📦",
   costco: "🏬",
+  aliexpress: "🌐",
+  temu: "🛍️",
+  newegg: "💻",
+  homedepot: "🔨",
+  lowes: "🏠",
+  wayfair: "🪑",
+  etsy: "🎨",
+  argos: "🇬🇧",
+  currys: "📱",
+  johnlewis: "🏷️",
+  ao: "🔌",
+  very: "✨",
   unknown: "🛍️",
 };
 
