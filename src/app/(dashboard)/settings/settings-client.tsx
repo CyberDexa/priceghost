@@ -96,27 +96,31 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
     timezone: preferences?.timezone ?? "UTC",
     currency: preferences?.currency ?? "USD",
   });
+  const [error, setError] = useState<string | null>(null);
 
   const handleSave = async () => {
     setIsSaving(true);
     setSaveSuccess(false);
+    setError(null);
     try {
-      if (preferences?.id) {
-        await supabase
-          .from("user_preferences")
-          .update(settings)
-          .eq("id", preferences.id);
-      } else {
-        await supabase.from("user_preferences").insert({
-          user_id: user.id,
-          ...settings,
-        });
+      const response = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(settings),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to save settings");
       }
+      
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
       router.refresh();
-    } catch (error) {
-      console.error("Error saving settings:", error);
+    } catch (err) {
+      console.error("Error saving settings:", err);
+      setError(err instanceof Error ? err.message : "Failed to save settings");
     } finally {
       setIsSaving(false);
     }
@@ -454,14 +458,21 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
         </Card>
 
         {/* Save Button */}
-        <div className="flex items-center gap-3">
-          <Button onClick={handleSave} disabled={isSaving}>
-            {isSaving ? "Saving..." : "Save Preferences"}
-          </Button>
-          {saveSuccess && (
-            <span className="text-emerald-600 text-sm flex items-center gap-1">
-              <CheckCircle className="h-4 w-4" />
-              Saved successfully!
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-3">
+            <Button onClick={handleSave} disabled={isSaving}>
+              {isSaving ? "Saving..." : "Save Preferences"}
+            </Button>
+            {saveSuccess && (
+              <span className="text-emerald-600 text-sm flex items-center gap-1">
+                <CheckCircle className="h-4 w-4" />
+                Saved successfully!
+              </span>
+            )}
+          </div>
+          {error && (
+            <span className="text-red-600 text-sm">
+              Error: {error}
             </span>
           )}
         </div>
