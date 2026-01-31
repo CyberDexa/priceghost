@@ -1,0 +1,57 @@
+/* PriceGhost Floating Action Button Styles */
+
+#priceghost-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-radius: 50px;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+#priceghost-fab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.5), 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#priceghost-fab:active {
+  transform: translateY(0);
+}
+
+.priceghost-fab-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.priceghost-fab-text {
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  max-width: 0;
+  overflow: hidden;
+  transition: max-width 0.3s ease;
+}
+
+#priceghost-fab.expanded .priceghost-fab-text,
+#priceghost-fab:hover .priceghost-fab-text {
+  max-width: 150px;
+}
+
+/* Animation on page load */
+@keyframes priceghost-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+#priceghost-fab.animate {
+  animation: priceghost-bounce 0.5s ease;
+}
