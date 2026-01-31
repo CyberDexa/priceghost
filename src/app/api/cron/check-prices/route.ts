@@ -2,14 +2,16 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { scrapeProduct } from "@/lib/scrapers";
 
-// Use service role for cron jobs (bypasses RLS)
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
 export const runtime = "edge";
 export const maxDuration = 300; // 5 minutes max
+
+// Create Supabase client lazily (not at module load time)
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
 
 // Vercel Cron configuration
 export async function GET(request: Request) {
@@ -21,6 +23,8 @@ export async function GET(request: Request) {
   ) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const supabase = getSupabase();
 
   try {
     // Get all active products
