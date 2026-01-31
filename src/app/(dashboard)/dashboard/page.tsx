@@ -11,13 +11,23 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  // Fetch products
-  const { data: products } = await supabase
-    .from("products")
-    .select("*")
-    .eq("user_id", user.id)
-    .eq("is_active", true)
-    .order("created_at", { ascending: false });
+  // Fetch products and preferences in parallel
+  const [productsResult, preferencesResult] = await Promise.all([
+    supabase
+      .from("products")
+      .select("*")
+      .eq("user_id", user.id)
+      .eq("is_active", true)
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("user_preferences")
+      .select("currency")
+      .eq("user_id", user.id)
+      .single()
+  ]);
+
+  const products = productsResult.data;
+  const currency = preferencesResult.data?.currency || "USD";
 
   // Calculate stats
   const totalProducts = products?.length || 0;
@@ -40,6 +50,7 @@ export default async function DashboardPage() {
         totalSavings,
         priceDrops,
       }}
+      currency={currency}
     />
   );
 }

@@ -10,6 +10,7 @@ import {
   ArrowDownRight,
   Sparkles
 } from "lucide-react";
+import { formatPrice } from "@/lib/currency";
 
 interface SavingsStats {
   totalSaved: number;
@@ -24,7 +25,11 @@ interface SavingsStats {
   monthlyDrops: number;
 }
 
-export function SavingsWidget() {
+interface SavingsWidgetProps {
+  currency?: string;
+}
+
+export function SavingsWidget({ currency = "USD" }: SavingsWidgetProps) {
   const [stats, setStats] = useState<SavingsStats | null>(null);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
@@ -151,7 +156,7 @@ export function SavingsWidget() {
           </div>
         </div>
         <div className="text-3xl font-bold mb-1">
-          ${stats.totalSaved.toFixed(2)}
+          {formatPrice(stats.totalSaved, currency)}
         </div>
         <div className="text-emerald-100 text-sm flex items-center gap-1">
           <Sparkles className="h-4 w-4" />
@@ -217,7 +222,7 @@ export function SavingsWidget() {
             <div>
               <div className="text-sm text-amber-700 font-medium">🏆 Biggest Savings</div>
               <div className="text-lg font-bold text-gray-900">
-                ${stats.biggestDrop.amount.toFixed(2)} off on {stats.biggestDrop.productName}
+                {formatPrice(stats.biggestDrop.amount, currency)} off on {stats.biggestDrop.productName}
               </div>
             </div>
           </div>

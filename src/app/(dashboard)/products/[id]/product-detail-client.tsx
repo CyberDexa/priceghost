@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { format, formatDistanceToNow } from "date-fns";
+import { formatPrice, getCurrencySymbol } from "@/lib/currency";
 import {
   ArrowLeft,
   ExternalLink,
@@ -56,12 +57,14 @@ interface ProductDetailClientProps {
   product: Product;
   priceHistory: PriceHistoryPoint[];
   alerts: Alert[];
+  currency?: string;
 }
 
 export function ProductDetailClient({
   product,
   priceHistory,
   alerts,
+  currency = "USD",
 }: ProductDetailClientProps) {
   const router = useRouter();
   const supabase = createClient();
@@ -201,7 +204,7 @@ export function ProductDetailClient({
               {/* Current Price */}
               <div className="flex items-baseline gap-2 mb-4">
                 <span className="text-3xl font-bold text-gray-900">
-                  ${product.current_price?.toFixed(2) || "N/A"}
+                  {product.current_price ? formatPrice(product.current_price, currency) : "N/A"}
                 </span>
                 {priceChange !== 0 && (
                   <span
@@ -224,13 +227,13 @@ export function ProductDetailClient({
                 <div className="bg-emerald-50 rounded-lg p-3">
                   <p className="text-xs text-emerald-600 font-medium">Lowest</p>
                   <p className="text-lg font-semibold text-emerald-700">
-                    ${product.lowest_price?.toFixed(2) || "—"}
+                    {product.lowest_price ? formatPrice(product.lowest_price, currency) : "—"}
                   </p>
                 </div>
                 <div className="bg-red-50 rounded-lg p-3">
                   <p className="text-xs text-red-600 font-medium">Highest</p>
                   <p className="text-lg font-semibold text-red-700">
-                    ${product.highest_price?.toFixed(2) || "—"}
+                    {product.highest_price ? formatPrice(product.highest_price, currency) : "—"}
                   </p>
                 </div>
               </div>
@@ -260,7 +263,7 @@ export function ProductDetailClient({
                 </div>
                 {product.target_price && (
                   <p className="text-xs text-gray-500 mt-1">
-                    Current target: ${product.target_price.toFixed(2)}
+                    Current target: {formatPrice(product.target_price, currency)}
                   </p>
                 )}
               </div>
@@ -326,6 +329,7 @@ export function ProductDetailClient({
                 data={priceHistory}
                 targetPrice={product.target_price}
                 lowestPrice={product.lowest_price}
+                currency={currency}
               />
             </CardContent>
           </Card>
@@ -414,7 +418,7 @@ export function ProductDetailClient({
                               )}
                             </td>
                             <td className="py-2 text-right font-medium">
-                              ${record.price.toFixed(2)}
+                              {formatPrice(record.price, currency)}
                             </td>
                             <td className="py-2 text-right">
                               {change !== null ? (
@@ -427,7 +431,7 @@ export function ProductDetailClient({
                                         : "text-gray-400"
                                   }
                                 >
-                                  {change < 0 ? "↓" : change > 0 ? "↑" : "—"} $
+                                  {change < 0 ? "↓" : change > 0 ? "↑" : "—"} {getCurrencySymbol(currency)}
                                   {Math.abs(change).toFixed(2)}
                                 </span>
                               ) : (

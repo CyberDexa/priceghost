@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { getCurrencySymbol, formatPrice } from "@/lib/currency";
 import {
   LineChart,
   Line,
@@ -23,12 +24,14 @@ interface PriceHistoryChartProps {
   data: PriceDataPoint[];
   targetPrice?: number | null;
   lowestPrice?: number | null;
+  currency?: string;
 }
 
 export function PriceHistoryChart({
   data,
   targetPrice,
   lowestPrice,
+  currency = "USD",
 }: PriceHistoryChartProps) {
   const chartData = useMemo(() => {
     return data
@@ -79,7 +82,7 @@ export function PriceHistoryChart({
             tick={{ fontSize: 12, fill: "#6b7280" }}
             tickLine={false}
             axisLine={{ stroke: "#e5e7eb" }}
-            tickFormatter={(value) => `$${value.toFixed(0)}`}
+            tickFormatter={(value) => `${getCurrencySymbol(currency)}${value.toFixed(0)}`}
           />
           <Tooltip
             content={({ active, payload }) => {
@@ -89,7 +92,7 @@ export function PriceHistoryChart({
                   <div className="bg-white shadow-lg border border-gray-200 rounded-lg p-3">
                     <p className="text-sm text-gray-500">{data.fullDate}</p>
                     <p className="text-lg font-semibold text-gray-900">
-                      ${data.price.toFixed(2)}
+                      {formatPrice(data.price, currency)}
                     </p>
                   </div>
                 );
@@ -103,7 +106,7 @@ export function PriceHistoryChart({
               stroke="#10b981"
               strokeDasharray="5 5"
               label={{
-                value: `Target: $${targetPrice}`,
+                value: `Target: ${getCurrencySymbol(currency)}${targetPrice}`,
                 position: "right",
                 fill: "#10b981",
                 fontSize: 12,
@@ -116,7 +119,7 @@ export function PriceHistoryChart({
               stroke="#3b82f6"
               strokeDasharray="3 3"
               label={{
-                value: `Lowest: $${lowestPrice}`,
+                value: `Lowest: ${getCurrencySymbol(currency)}${lowestPrice}`,
                 position: "left",
                 fill: "#3b82f6",
                 fontSize: 12,

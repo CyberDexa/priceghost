@@ -13,11 +13,21 @@ export default async function ProductsPage() {
     redirect("/login");
   }
 
-  const { data: products } = await supabase
-    .from("products")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false });
+  // Fetch products and user preferences in parallel
+  const [productsResult, preferencesResult] = await Promise.all([
+    supabase
+      .from("products")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("user_preferences")
+      .select("currency")
+      .eq("user_id", user.id)
+      .single(),
+  ]);
 
-  return <ProductsClient products={products || []} />;
+  const currency = preferencesResult.data?.currency || "USD";
+
+  return <ProductsClient products={productsResult.data || []} currency={currency} />;
 }

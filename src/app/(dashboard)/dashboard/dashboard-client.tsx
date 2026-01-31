@@ -9,6 +9,7 @@ import { SavingsWidget } from "@/components/dashboard/savings-widget";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus, Ghost, Download, Trash2, RefreshCw } from "lucide-react";
+import { formatPrice } from "@/lib/currency";
 
 interface DashboardClientProps {
   products: Product[];
@@ -17,9 +18,10 @@ interface DashboardClientProps {
     totalSavings: number;
     priceDrops: number;
   };
+  currency?: string;
 }
 
-export function DashboardClient({ products, stats }: DashboardClientProps) {
+export function DashboardClient({ products, stats, currency = "USD" }: DashboardClientProps) {
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set());
   const [bulkLoading, setBulkLoading] = useState(false);
@@ -216,7 +218,7 @@ export function DashboardClient({ products, stats }: DashboardClientProps) {
       </div>
 
       {/* Savings Stats Widget */}
-      <SavingsWidget />
+      <SavingsWidget currency={currency} />
 
       {/* Filters */}
       <ProductFilters

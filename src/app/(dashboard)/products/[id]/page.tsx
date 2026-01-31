@@ -47,6 +47,15 @@ export default async function ProductDetailPage({ params }: PageProps) {
     .order("created_at", { ascending: false })
     .limit(10);
 
+  // Fetch user currency preference
+  const { data: preferences } = await supabase
+    .from("user_preferences")
+    .select("currency")
+    .eq("user_id", user.id)
+    .single();
+
+  const currency = preferences?.currency || "USD";
+
   return (
     <Suspense
       fallback={
@@ -60,6 +69,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
         product={product}
         priceHistory={priceHistory || []}
         alerts={alerts || []}
+        currency={currency}
       />
     </Suspense>
   );

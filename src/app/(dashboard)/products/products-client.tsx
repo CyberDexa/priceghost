@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { formatPrice } from "@/lib/currency";
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import {
@@ -32,9 +33,10 @@ interface Product {
 
 interface ProductsClientProps {
   products: Product[];
+  currency?: string;
 }
 
-export function ProductsClient({ products }: ProductsClientProps) {
+export function ProductsClient({ products, currency = "USD" }: ProductsClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterRetailer, setFilterRetailer] = useState<string>("all");
   const [showAddModal, setShowAddModal] = useState(false);
@@ -156,7 +158,7 @@ export function ProductsClient({ products }: ProductsClientProps) {
 
                         <div className="flex items-baseline gap-2">
                           <span className="text-lg font-bold text-gray-900">
-                            ${product.current_price?.toFixed(2) || "N/A"}
+                            {product.current_price ? formatPrice(product.current_price, currency) : "N/A"}
                           </span>
                           {priceChange !== 0 && (
                             <span
@@ -178,7 +180,7 @@ export function ProductsClient({ products }: ProductsClientProps) {
 
                         {product.lowest_price && (
                           <p className="text-xs text-emerald-600 mt-1">
-                            Lowest: ${product.lowest_price.toFixed(2)}
+                            Lowest: {formatPrice(product.lowest_price, currency)}
                           </p>
                         )}
                       </div>
