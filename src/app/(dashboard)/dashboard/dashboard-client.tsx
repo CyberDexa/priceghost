@@ -63,11 +63,11 @@ export function DashboardClient({ products, stats }: DashboardClientProps) {
     // Price range filter
     if (filters.minPrice) {
       const min = parseFloat(filters.minPrice);
-      result = result.filter((p) => p.current_price >= min);
+      result = result.filter((p) => (p.current_price ?? 0) >= min);
     }
     if (filters.maxPrice) {
       const max = parseFloat(filters.maxPrice);
-      result = result.filter((p) => p.current_price <= max);
+      result = result.filter((p) => (p.current_price ?? 0) <= max);
     }
 
     // Status filter
@@ -81,7 +81,7 @@ export function DashboardClient({ products, stats }: DashboardClientProps) {
           break;
         case "price-drop":
           result = result.filter(
-            (p) => p.original_price && p.current_price < p.original_price
+            (p) => p.original_price && (p.current_price ?? 0) < (p.original_price ?? 0)
           );
           break;
       }
@@ -102,10 +102,10 @@ export function DashboardClient({ products, stats }: DashboardClientProps) {
         );
         break;
       case "price-low":
-        result.sort((a, b) => a.current_price - b.current_price);
+        result.sort((a, b) => (a.current_price ?? 0) - (b.current_price ?? 0));
         break;
       case "price-high":
-        result.sort((a, b) => b.current_price - a.current_price);
+        result.sort((a, b) => (b.current_price ?? 0) - (a.current_price ?? 0));
         break;
       case "name-asc":
         result.sort((a, b) => a.name.localeCompare(b.name));
@@ -116,10 +116,10 @@ export function DashboardClient({ products, stats }: DashboardClientProps) {
       case "biggest-drop":
         result.sort((a, b) => {
           const dropA = a.original_price
-            ? a.original_price - a.current_price
+            ? (a.original_price ?? 0) - (a.current_price ?? 0)
             : 0;
           const dropB = b.original_price
-            ? b.original_price - b.current_price
+            ? (b.original_price ?? 0) - (b.current_price ?? 0)
             : 0;
           return dropB - dropA;
         });

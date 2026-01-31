@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     // Check if product already exists for this user
     const { data: existingProduct } = await supabase
       .from("products")
-      .select("id")
+      .select("id, name")
       .eq("user_id", user.id)
       .eq("url", url)
       .single();

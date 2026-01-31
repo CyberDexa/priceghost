@@ -37,6 +37,7 @@ interface ProductsClientProps {
 export function ProductsClient({ products }: ProductsClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterRetailer, setFilterRetailer] = useState<string>("all");
+  const [showAddModal, setShowAddModal] = useState(false);
 
   // Get unique retailers
   const retailers = Array.from(new Set(products.map((p) => p.retailer)));
@@ -60,7 +61,8 @@ export function ProductsClient({ products }: ProductsClientProps) {
             {products.length} product{products.length !== 1 ? "s" : ""} tracked
           </p>
         </div>
-        <AddProductModal />
+        <Button onClick={() => setShowAddModal(true)}>Add Product</Button>
+        <AddProductModal isOpen={showAddModal} onClose={() => setShowAddModal(false)} />
       </div>
 
       {/* Filters */}
@@ -106,7 +108,9 @@ export function ProductsClient({ products }: ProductsClientProps) {
                 ? "Start tracking prices by adding your first product."
                 : "Try adjusting your search or filter."}
             </p>
-            {products.length === 0 && <AddProductModal />}
+            {products.length === 0 && (
+              <Button onClick={() => setShowAddModal(true)}>Add Your First Product</Button>
+            )}
           </CardContent>
         </Card>
       ) : (

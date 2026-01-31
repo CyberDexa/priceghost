@@ -16,8 +16,8 @@ export function detectRetailer(url: string): Retailer {
 }
 
 // Parse price string to number
-function parsePrice(priceStr: string | undefined): number | null {
-  if (!priceStr) return null;
+function parsePrice(priceStr: string | undefined): number | undefined {
+  if (!priceStr) return undefined;
   
   // Remove currency symbols and clean up
   const cleaned = priceStr
@@ -25,7 +25,7 @@ function parsePrice(priceStr: string | undefined): number | null {
     .replace(/,/g, "");
   
   const price = parseFloat(cleaned);
-  return isNaN(price) ? null : price;
+  return isNaN(price) ? undefined : price;
 }
 
 // Amazon scraper
@@ -159,10 +159,10 @@ async function scrapeGeneric(html: string, url: string): Promise<ScrapeResult> {
     $("title").text().trim();
   
   // Get price from JSON-LD
-  let price: number | null = null;
+  let price: number | undefined = undefined;
   if (jsonLd?.offers) {
     const offers = Array.isArray(jsonLd.offers) ? jsonLd.offers[0] : jsonLd.offers;
-    price = parseFloat(offers?.price) || null;
+    price = parseFloat(offers?.price) || undefined;
   }
   
   // Fallback price detection
