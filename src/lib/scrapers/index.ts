@@ -77,40 +77,94 @@ function getRetailerDisplayName(url: string): string {
 }
 
 // Amazon scraper
+// Amazon scraper - improved price detection
 async function scrapeAmazon(html: string, url: string): Promise<ScrapeResult> {
   const $ = cheerio.load(html);
   
   // Product name
   const name = $("#productTitle").text().trim() ||
     $("h1.product-title-word-break").text().trim() ||
+    $("h1 span#title").text().trim() ||
     $("h1 span").first().text().trim();
   
+  // Detect currency from URL domain
+  const hostname = new URL(url).hostname.toLowerCase();
+  let currency = "USD";
+  if (hostname.includes(".co.uk") || hostname.includes("amzn.eu")) currency = "GBP";
+  else if (hostname.includes(".de") || hostname.includes(".fr") || hostname.includes(".it") || hostname.includes(".es")) currency = "EUR";
+  else if (hostname.includes(".ca")) currency = "CAD";
+  else if (hostname.includes(".com.au")) currency = "AUD";
+  else if (hostname.includes(".co.jp")) currency = "JPY";
+  
   // Price - Amazon has multiple price locations
-  const priceStr = 
-    $(".a-price .a-offscreen").first().text() ||
-    $("#priceblock_ourprice").text() ||
-    $("#priceblock_dealprice").text() ||
-    $(".a-price-whole").first().text() ||
-    $('[data-a-color="price"] .a-offscreen').first().text();
+  // Priority: main price block > deal price > core price
+  // Avoid very small prices (like £0.01 for add-ons)
+  const priceSelectors = [
+    '#corePriceDisplay_desktop_feature_div .a-price .a-offscreen',
+    '#corePrice_desktop .a-price .a-offscreen',
+    '.priceToPay .a-offscreen',
+    '#price_inside_buybox',
+    '#priceblock_ourprice',
+    '#priceblock_dealprice',
+    '#priceblock_saleprice',
+    '.a-price.aok-align-center .a-offscreen',
+    '#apex_offerDisplay_desktop .a-price .a-offscreen',
+    '.a-price .a-offscreen',
+    '.a-price-whole',
+  ];
+  
+  let priceStr: string | undefined;
+  let price: number | undefined;
+  
+  for (const selector of priceSelectors) {
+    const foundPrice = $(selector).first().text().trim();
+    if (foundPrice) {
+      const parsedPrice = parsePrice(foundPrice);
+      // Skip very low prices (likely add-ons or errors) - products should cost more than £1
+      if (parsedPrice && parsedPrice > 1) {
+        priceStr = foundPrice;
+        price = parsedPrice;
+        break;
+      }
+    }
+  }
+  
+  // If we still have no price, try the whole price + fraction approach
+  if (!price) {
+    const wholePart = $(".a-price-whole").first().text().replace(/[,.\s]/g, "");
+    const fractionPart = $(".a-price-fraction").first().text() || "00";
+    if (wholePart) {
+      const combined = parseFloat(wholePart + "." + fractionPart);
+      if (!isNaN(combined) && combined > 1) {
+        price = combined;
+      }
+    }
+  }
   
   // Image
   const imageUrl = 
     $("#landingImage").attr("src") ||
     $("#imgBlkFront").attr("src") ||
     $(".a-dynamic-image").first().attr("src") ||
-    $("#main-image").attr("src");
+    $("#main-image").attr("src") ||
+    $('[data-a-image-name="landingImage"]').attr("src");
   
-  const price = parsePrice(priceStr);
+  // Detect currency from price string if not detected from URL
+  if (priceStr) {
+    if (priceStr.includes("£")) currency = "GBP";
+    else if (priceStr.includes("€")) currency = "EUR";
+  }
   
   return {
     success: true,
     name: name || "Amazon Product",
     price,
-    currency: "USD",
+    currency,
     image_url: imageUrl,
     retailer: "amazon",
   };
 }
+
 
 // Walmart scraper
 async function scrapeWalmart(html: string, url: string): Promise<ScrapeResult> {
@@ -462,7 +516,7 @@ export async function scrapeProduct(url: string): Promise<ScrapeResult> {
         "User-Agent": userAgent,
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
         "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
-        "Accept-Encoding": "gzip, deflate, br",
+        // Removed Accept-Encoding to get uncompressed HTML
         "Connection": "keep-alive",
         "Upgrade-Insecure-Requests": "1",
         "Cache-Control": "no-cache",
