@@ -6,11 +6,11 @@ import { scrapeProduct } from "@/lib/scrapers";
 export const runtime = "nodejs";
 export const maxDuration = 60; // 60 seconds max for Vercel hobby plan
 
-// Create Supabase client lazily (not at module load time)
-function getSupabase() {
+// Create Supabase admin client (bypasses RLS for cron jobs)
+function getSupabaseAdmin() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 }
 
@@ -25,7 +25,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const supabase = getSupabase();
+  const supabase = getSupabaseAdmin();
 
   try {
     // Get all active products
