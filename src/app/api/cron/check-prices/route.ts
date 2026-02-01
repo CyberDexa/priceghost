@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { scrapeProduct } from "@/lib/scrapers";
 
-export const runtime = "edge";
-export const maxDuration = 300; // 5 minutes max
+// Use nodejs runtime for better compatibility with scraping
+export const runtime = "nodejs";
+export const maxDuration = 60; // 60 seconds max for Vercel hobby plan
 
 // Create Supabase client lazily (not at module load time)
 function getSupabase() {
@@ -70,63 +71,64 @@ export async function GET(request: Request) {
                 price: newPrice,
               });
 
-              // Update product if price changed
+              // Build update data - always update last_checked
+              const updateData: Record<string, unknown> = {
+                current_price: newPrice,
+                last_checked: new Date().toISOString(),
+              };
+
+              // Track lowest price
+              if (!product.lowest_price || newPrice < product.lowest_price) {
+                updateData.lowest_price = newPrice;
+              }
+
+              // Track highest price
+              if (!product.highest_price || newPrice > product.highest_price) {
+                updateData.highest_price = newPrice;
+              }
+
+              // Track if price changed
               if (newPrice !== oldPrice) {
-                const updateData: Record<string, unknown> = {
-                  current_price: newPrice,
-                  last_checked: new Date().toISOString(),
-                };
-
-                // Track lowest price
-                if (!product.lowest_price || newPrice < product.lowest_price) {
-                  updateData.lowest_price = newPrice;
-                }
-
-                // Track highest price
-                if (!product.highest_price || newPrice > product.highest_price) {
-                  updateData.highest_price = newPrice;
-                }
-
-                await supabase
-                  .from("products")
-                  .update(updateData)
-                  .eq("id", product.id);
-
                 results.updated++;
+              }
 
-                // Check for price drop
-                if (oldPrice && newPrice < oldPrice) {
-                  results.priceDrops++;
+              await supabase
+                .from("products")
+                .update(updateData)
+                .eq("id", product.id);
 
-                  // Create alert
+              // Check for price drop
+              if (oldPrice && newPrice < oldPrice) {
+                results.priceDrops++;
+
+                // Create alert
+                await supabase.from("alerts").insert({
+                  user_id: product.user_id,
+                  product_id: product.id,
+                  alert_type: "price_drop",
+                  message: `Price dropped from $${oldPrice.toFixed(2)} to $${newPrice.toFixed(2)} for ${product.name}`,
+                  old_price: oldPrice,
+                  new_price: newPrice,
+                });
+
+                // Check if below target price
+                if (product.target_price && newPrice <= product.target_price) {
                   await supabase.from("alerts").insert({
                     user_id: product.user_id,
                     product_id: product.id,
-                    alert_type: "price_drop",
-                    message: `Price dropped from $${oldPrice.toFixed(2)} to $${newPrice.toFixed(2)} for ${product.name}`,
+                    alert_type: "target_reached",
+                    message: `Target price reached! ${product.name} is now $${newPrice.toFixed(2)} (target: $${product.target_price.toFixed(2)})`,
                     old_price: oldPrice,
                     new_price: newPrice,
                   });
-
-                  // Check if below target price
-                  if (product.target_price && newPrice <= product.target_price) {
-                    await supabase.from("alerts").insert({
-                      user_id: product.user_id,
-                      product_id: product.id,
-                      alert_type: "target_reached",
-                      message: `Target price reached! ${product.name} is now $${newPrice.toFixed(2)} (target: $${product.target_price.toFixed(2)})`,
-                      old_price: oldPrice,
-                      new_price: newPrice,
-                    });
-                  }
                 }
-              } else {
-                // Just update last_checked
-                await supabase
-                  .from("products")
-                  .update({ last_checked: new Date().toISOString() })
-                  .eq("id", product.id);
               }
+            } else {
+              // Scrape failed - just update last_checked so we know we tried
+              await supabase
+                .from("products")
+                .update({ last_checked: new Date().toISOString() })
+                .eq("id", product.id);
             }
           } catch (error) {
             console.error(`Error checking product ${product.id}:`, error);
