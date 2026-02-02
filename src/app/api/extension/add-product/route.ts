@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { url, name, price, image_url, retailer, target_price } = body;
+    const { url, name, price, currency, image_url, retailer, target_price } = body;
 
     if (!url) {
       return NextResponse.json(
@@ -99,6 +99,7 @@ export async function POST(request: Request) {
         highest_price: price,
         image_url: image_url,
         retailer: retailer || "unknown",
+        currency: currency || "USD",
         target_price: target_price,
         is_active: true,
         last_checked: new Date().toISOString(),
