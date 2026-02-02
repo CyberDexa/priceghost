@@ -1,6 +1,6 @@
 // PriceGhost Extension - Popup Script
 
-const API_URL = "http://localhost:3000"; // Change to production URL when deploying
+const API_URL = "https://priceghost.vercel.app"; // Production URL
 
 // DOM Elements
 const loadingEl = document.getElementById("loading");
