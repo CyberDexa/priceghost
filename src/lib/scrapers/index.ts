@@ -509,64 +509,56 @@ export async function scrapeProduct(url: string): Promise<ScrapeResult> {
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2.1 Safari/605.1.15",
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0",
     ];
     const userAgent = userAgents[Math.floor(Math.random() * userAgents.length)];
     
-    // Add random delay to avoid rate limiting
-    await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 500));
+    // Add small random delay
+    await new Promise(resolve => setTimeout(resolve, Math.random() * 500 + 200));
     
-    // For Amazon, try using a different approach
-    let fetchUrl = url;
+    let html: string;
     
-    // Use ScraperAPI if available (add SCRAPER_API_KEY to env)
+    // Use ScraperAPI for Amazon and Temu (they block direct requests)
     if (process.env.SCRAPER_API_KEY && (retailer === "amazon" || retailer === "temu")) {
-      fetchUrl = `http://api.scraperapi.com?api_key=${process.env.SCRAPER_API_KEY}&url=${encodeURIComponent(url)}&render=false`;
-    }
-    
-    const response = await fetch(fetchUrl, {
-      headers: {
-        "User-Agent": userAgent,
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
-        "Accept-Language": "en-GB,en;q=0.9,en-US;q=0.8",
-        "Cache-Control": "max-age=0",
-        "Sec-Ch-Ua": '"Chromium";v="122", "Not(A:Brand";v="24", "Google Chrome";v="122"',
-        "Sec-Ch-Ua-Mobile": "?0",
-        "Sec-Ch-Ua-Platform": '"macOS"',
-        "Sec-Fetch-Dest": "document",
-        "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "none",
-        "Sec-Fetch-User": "?1",
-        "Upgrade-Insecure-Requests": "1",
-      },
-      redirect: "follow",
-    });
-    
-    if (!response.ok) {
-      // Retry once with different headers for Amazon
-      if (retailer === "amazon" && response.status === 404) {
-        const retryResponse = await fetch(url, {
-          headers: {
-            "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "Accept-Language": "en-GB,en;q=0.9",
-          },
-          redirect: "follow",
-        });
-        
-        if (retryResponse.ok) {
-          const html = await retryResponse.text();
-          return scrapeAmazon(html, url);
-        }
+      const scraperUrl = `https://api.scraperapi.com?api_key=${process.env.SCRAPER_API_KEY}&url=${encodeURIComponent(url)}&country_code=uk`;
+      
+      const response = await fetch(scraperUrl, {
+        method: "GET",
+        redirect: "follow",
+      });
+      
+      if (!response.ok) {
+        return {
+          success: false,
+          error: `ScraperAPI failed: ${response.status}`,
+        };
       }
       
-      return {
-        success: false,
-        error: `Failed to fetch page: ${response.status}`,
-      };
+      html = await response.text();
+    } else {
+      // Direct fetch for other retailers
+      const response = await fetch(url, {
+        headers: {
+          "User-Agent": userAgent,
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+          "Accept-Language": "en-GB,en;q=0.9,en-US;q=0.8",
+          "Cache-Control": "max-age=0",
+          "Sec-Fetch-Dest": "document",
+          "Sec-Fetch-Mode": "navigate",
+          "Sec-Fetch-Site": "none",
+          "Upgrade-Insecure-Requests": "1",
+        },
+        redirect: "follow",
+      });
+      
+      if (!response.ok) {
+        return {
+          success: false,
+          error: `Failed to fetch page: ${response.status}`,
+        };
+      }
+      
+      html = await response.text();
     }
-    
-    const html = await response.text();
     
     // Route to appropriate scraper
     switch (retailer) {
