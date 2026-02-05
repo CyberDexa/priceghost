@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { scrapeProduct } from "@/lib/scrapers";
+import { sendPriceDropEmail, sendTargetReachedEmail } from "@/lib/email/send";
 
 // Use nodejs runtime for better compatibility with scraping
 export const runtime = "nodejs";
@@ -43,10 +44,29 @@ export async function GET(request: Request) {
       return NextResponse.json({ message: "No products to check", checked: 0 });
     }
 
+    // Get user preferences for all unique users
+    const userIds = [...new Set(products.map(p => p.user_id))];
+    const { data: userPrefs } = await supabase
+      .from("user_preferences")
+      .select("user_id, email_notifications")
+      .in("user_id", userIds);
+
+    // Create a map of user preferences
+    const userPrefsMap = new Map(
+      (userPrefs || []).map(p => [p.user_id, p])
+    );
+
+    // Get user emails from auth.users (admin client has access)
+    const { data: authUsers } = await supabase.auth.admin.listUsers();
+    const userEmailMap = new Map(
+      (authUsers?.users || []).map(u => [u.id, u.email])
+    );
+
     const results = {
       checked: 0,
       updated: 0,
       priceDrops: 0,
+      emailsSent: 0,
       errors: 0,
     };
 
@@ -111,6 +131,29 @@ export async function GET(request: Request) {
                   new_price: newPrice,
                 });
 
+                // Send email notification if user has notifications enabled
+                const userEmail = userEmailMap.get(product.user_id);
+                const userPref = userPrefsMap.get(product.user_id);
+                const emailEnabled = userPref?.email_notifications !== false; // Default to true
+
+                if (userEmail && emailEnabled) {
+                  try {
+                    const emailResult = await sendPriceDropEmail({
+                      to: userEmail,
+                      productName: product.name,
+                      productUrl: product.url,
+                      oldPrice: oldPrice,
+                      newPrice: newPrice,
+                      imageUrl: product.image_url || undefined,
+                    });
+                    if (emailResult.success) {
+                      results.emailsSent++;
+                    }
+                  } catch (emailError) {
+                    console.error(`Failed to send price drop email:`, emailError);
+                  }
+                }
+
                 // Check if below target price
                 if (product.target_price && newPrice <= product.target_price) {
                   await supabase.from("alerts").insert({
@@ -121,6 +164,22 @@ export async function GET(request: Request) {
                     old_price: oldPrice,
                     new_price: newPrice,
                   });
+
+                  // Send target reached email
+                  if (userEmail && emailEnabled) {
+                    try {
+                      await sendTargetReachedEmail({
+                        to: userEmail,
+                        productName: product.name,
+                        productUrl: product.url,
+                        targetPrice: product.target_price,
+                        currentPrice: newPrice,
+                        imageUrl: product.image_url || undefined,
+                      });
+                    } catch (emailError) {
+                      console.error(`Failed to send target reached email:`, emailError);
+                    }
+                  }
                 }
               }
             } else {
