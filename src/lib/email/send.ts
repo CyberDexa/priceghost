@@ -12,7 +12,12 @@ const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
 
-const FROM_EMAIL = "PriceGhost <alerts@cyberdexa.com>";
+// Email addresses for different purposes (using verified cyberdexa.com domain)
+const EMAIL_ADDRESSES = {
+  alerts: "PriceGhost Alerts <alerts@cyberdexa.com>",
+  support: "PriceGhost Support <support@cyberdexa.com>",
+  feedback: "PriceGhost <feedback@cyberdexa.com>",
+};
 
 // ============================================
 // PRICE DROP EMAIL
@@ -89,7 +94,7 @@ export async function sendPriceDropEmail({
 
   try {
     const { data, error } = await resend.emails.send({
-      from: FROM_EMAIL,
+      from: EMAIL_ADDRESSES.alerts,
       to: [to],
       subject: `🎉 Price Drop: Save $${savings.toFixed(2)} on ${productName.slice(0, 40)}...`,
       html: generateEmailWrapper(content, `Save $${savings.toFixed(2)} (${percentOff.toFixed(0)}% off) on ${productName}`),
@@ -185,7 +190,7 @@ export async function sendTargetReachedEmail({
 
   try {
     const { data, error } = await resend.emails.send({
-      from: FROM_EMAIL,
+      from: EMAIL_ADDRESSES.alerts,
       to: [to],
       subject: `🎯 Target Price Reached: ${productName.slice(0, 40)}...`,
       html: generateEmailWrapper(content, `Your target price of $${targetPrice.toFixed(2)} has been reached!`),
@@ -338,7 +343,7 @@ export async function sendWeeklyDigestEmail({
 
   try {
     const { data, error } = await resend.emails.send({
-      from: FROM_EMAIL,
+      from: EMAIL_ADDRESSES.alerts,
       to: [to],
       subject: `📊 Your Weekly Price Report: ${priceDrops.length} drops, $${totalSavings.toFixed(0)} savings`,
       html: generateEmailWrapper(content, `${priceDrops.length} price drops found. Total potential savings: $${totalSavings.toFixed(0)}`),
@@ -468,7 +473,7 @@ export async function sendWelcomeEmail({ to, userName }: WelcomeEmailProps) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: FROM_EMAIL,
+      from: EMAIL_ADDRESSES.support,
       to: [to],
       subject: "👻 Welcome to PriceGhost - Let's save some money!",
       html: generateEmailWrapper(content, "Welcome to PriceGhost! Start tracking prices and never miss a deal."),
