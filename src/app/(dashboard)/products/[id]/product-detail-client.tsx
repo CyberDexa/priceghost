@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { format, formatDistanceToNow } from "date-fns";
 import { formatPrice, getCurrencySymbol } from "@/lib/currency";
+import { getValidImageUrl } from "@/lib/utils/image";
 import {
   ArrowLeft,
   ExternalLink,
@@ -176,9 +177,9 @@ export function ProductDetailClient({
             <CardContent className="pt-6">
               {/* Product Image */}
               <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden mb-4">
-                {product.image_url ? (
+                {getValidImageUrl(product.image_url) ? (
                   <Image
-                    src={product.image_url}
+                    src={getValidImageUrl(product.image_url)!}
                     alt={product.name}
                     fill
                     className="object-contain"

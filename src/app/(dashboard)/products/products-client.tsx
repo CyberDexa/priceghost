@@ -5,6 +5,7 @@ import Link from "next/link";
 import { formatPrice } from "@/lib/currency";
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
+import { getValidImageUrl } from "@/lib/utils/image";
 import {
   Package,
   TrendingDown,
@@ -132,9 +133,9 @@ export function ProductsClient({ products, currency = "USD" }: ProductsClientPro
                     <div className="flex gap-4">
                       {/* Image */}
                       <div className="relative w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                        {product.image_url ? (
+                        {getValidImageUrl(product.image_url) ? (
                           <Image
-                            src={product.image_url}
+                            src={getValidImageUrl(product.image_url)!}
                             alt={product.name}
                             fill
                             className="object-contain"

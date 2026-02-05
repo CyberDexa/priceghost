@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Search, X, Package, Loader2, ExternalLink } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useDebounce } from '@/lib/hooks/use-debounce';
+import { getValidImageUrl } from '@/lib/utils/image';
 
 interface Product {
   id: string;
@@ -141,9 +142,9 @@ export function GlobalSearch({ isOpen, onClose }: GlobalSearchProps) {
                     index === selectedIndex ? 'bg-zinc-800' : 'hover:bg-zinc-800/50'
                   }`}
                 >
-                  {product.image_url ? (
+                  {getValidImageUrl(product.image_url) ? (
                     <img
-                      src={product.image_url}
+                      src={getValidImageUrl(product.image_url)!}
                       alt={product.name}
                       className="w-12 h-12 object-contain rounded bg-white"
                     />

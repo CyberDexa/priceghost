@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import { formatPrice } from "@/lib/currency";
+import { getValidImageUrl } from "@/lib/utils/image";
 import {
   TrendingDown,
   ExternalLink,
@@ -143,9 +144,9 @@ export function PriceDropsClient({ products, totalSavings, currency = "USD" }: P
                       <div className="flex gap-4">
                         {/* Image */}
                         <div className="relative w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                          {product.image_url ? (
+                          {getValidImageUrl(product.image_url) ? (
                             <Image
-                              src={product.image_url}
+                              src={getValidImageUrl(product.image_url)!}
                               alt={product.name}
                               fill
                               className="object-contain"

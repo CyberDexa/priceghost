@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/types";
 import { cn } from "@/lib/utils/cn";
+import { getValidImageUrl } from "@/lib/utils/image";
 import { 
   ExternalLink, 
   TrendingDown, 
@@ -83,10 +84,10 @@ export function ProductCard({ product, currency = "USD" }: ProductCardProps) {
         <div className="relative flex">
           {/* Product Image */}
           <div className="w-32 h-32 sm:w-40 sm:h-40 relative flex-shrink-0 bg-zinc-900/50">
-            {product.image_url ? (
+            {getValidImageUrl(product.image_url) ? (
               <>
                 <Image
-                  src={product.image_url}
+                  src={getValidImageUrl(product.image_url)!}
                   alt={product.name}
                   fill
                   className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"

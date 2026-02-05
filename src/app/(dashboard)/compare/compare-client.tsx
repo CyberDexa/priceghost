@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatPrice, getCurrencySymbol } from "@/lib/currency";
+import { getValidImageUrl } from "@/lib/utils/image";
 import {
   Search,
   ArrowUpDown,
@@ -282,9 +283,9 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
                               <td className="py-3 px-4">
                                 <div className="flex items-center gap-3">
                                   <div className="w-12 h-12 bg-zinc-800 rounded-lg overflow-hidden relative flex-shrink-0">
-                                    {product.image_url ? (
+                                    {getValidImageUrl(product.image_url) ? (
                                       <Image
-                                        src={product.image_url}
+                                        src={getValidImageUrl(product.image_url)!}
                                         alt={product.name}
                                         fill
                                         className="object-contain"

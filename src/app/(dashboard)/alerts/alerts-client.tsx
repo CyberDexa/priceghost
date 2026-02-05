@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
+import { getValidImageUrl } from "@/lib/utils/image";
 import {
   Bell,
   BellOff,
@@ -137,10 +138,10 @@ export function AlertsClient({ alerts: initialAlerts }: AlertsClientProps) {
                 <div className="flex gap-4">
                   {/* Product Image */}
                   <div className="relative w-16 h-16 bg-zinc-800 rounded-lg overflow-hidden flex-shrink-0">
-                    {alert.products?.image_url ? (
+                    {getValidImageUrl(alert.products?.image_url) ? (
                       <Image
-                        src={alert.products.image_url}
-                        alt={alert.products.name || "Product"}
+                        src={getValidImageUrl(alert.products?.image_url)!}
+                        alt={alert.products?.name || "Product"}
                         fill
                         className="object-contain"
                         sizes="64px"
