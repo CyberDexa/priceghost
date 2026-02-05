@@ -12,7 +12,7 @@ const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
 
-const FROM_EMAIL = "PriceGhost <alerts@priceghost.app>";
+const FROM_EMAIL = "PriceGhost <alerts@cyberdexa.com>";
 
 // ============================================
 // PRICE DROP EMAIL

@@ -176,7 +176,7 @@ export function ProductDetailClient({
           <Card>
             <CardContent className="pt-6">
               {/* Product Image */}
-              <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden mb-4">
+              <div className="relative aspect-square bg-zinc-800 rounded-lg overflow-hidden mb-4">
                 {getValidImageUrl(product.image_url) ? (
                   <Image
                     src={getValidImageUrl(product.image_url)!}
@@ -186,25 +186,25 @@ export function ProductDetailClient({
                     sizes="(max-width: 768px) 100vw, 300px"
                   />
                 ) : (
-                  <div className="flex items-center justify-center h-full text-gray-400">
+                  <div className="flex items-center justify-center h-full text-zinc-500">
                     No image
                   </div>
                 )}
               </div>
 
               {/* Product Name */}
-              <h1 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-3">
+              <h1 className="text-lg font-semibold text-white mb-2 line-clamp-3">
                 {product.name}
               </h1>
 
               {/* Retailer */}
-              <p className="text-sm text-gray-500 capitalize mb-4">
+              <p className="text-sm text-zinc-400 capitalize mb-4">
                 {product.retailer}
               </p>
 
               {/* Current Price */}
               <div className="flex items-baseline gap-2 mb-4">
-                <span className="text-3xl font-bold text-gray-900">
+                <span className="text-3xl font-bold text-white">
                   {product.current_price ? formatPrice(product.current_price, currency) : "N/A"}
                 </span>
                 {priceChange !== 0 && (
@@ -225,15 +225,15 @@ export function ProductDetailClient({
 
               {/* Price Stats */}
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-emerald-50 rounded-lg p-3">
-                  <p className="text-xs text-emerald-600 font-medium">Lowest</p>
-                  <p className="text-lg font-semibold text-emerald-700">
+                <div className="bg-emerald-500/10 rounded-lg p-3">
+                  <p className="text-xs text-emerald-400 font-medium">Lowest</p>
+                  <p className="text-lg font-semibold text-emerald-400">
                     {product.lowest_price ? formatPrice(product.lowest_price, currency) : "—"}
                   </p>
                 </div>
-                <div className="bg-red-50 rounded-lg p-3">
-                  <p className="text-xs text-red-600 font-medium">Highest</p>
-                  <p className="text-lg font-semibold text-red-700">
+                <div className="bg-red-500/10 rounded-lg p-3">
+                  <p className="text-xs text-red-400 font-medium">Highest</p>
+                  <p className="text-lg font-semibold text-red-400">
                     {product.highest_price ? formatPrice(product.highest_price, currency) : "—"}
                   </p>
                 </div>
@@ -241,7 +241,7 @@ export function ProductDetailClient({
 
               {/* Target Price */}
               <div className="mb-6">
-                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                <label className="text-sm font-medium text-zinc-300 mb-2 block">
                   <Target className="h-4 w-4 inline mr-1" />
                   Target Price Alert
                 </label>
@@ -263,14 +263,14 @@ export function ProductDetailClient({
                   </Button>
                 </div>
                 {product.target_price && (
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-zinc-400 mt-1">
                     Current target: {formatPrice(product.target_price, currency)}
                   </p>
                 )}
               </div>
 
               {/* Last Checked */}
-              <p className="text-xs text-gray-500 mb-4">
+              <p className="text-xs text-zinc-500 mb-4">
                 Last checked:{" "}
                 {product.last_checked
                   ? formatDistanceToNow(new Date(product.last_checked), {
@@ -345,7 +345,7 @@ export function ProductDetailClient({
             </CardHeader>
             <CardContent>
               {alerts.length === 0 ? (
-                <p className="text-gray-500 text-sm">
+                <p className="text-zinc-400 text-sm">
                   No alerts yet. We&apos;ll notify you when the price changes!
                 </p>
               ) : (
@@ -355,14 +355,14 @@ export function ProductDetailClient({
                       key={alert.id}
                       className={`p-3 rounded-lg border ${
                         alert.alert_type === "target_reached"
-                          ? "bg-emerald-50 border-emerald-200"
-                          : "bg-blue-50 border-blue-200"
+                          ? "bg-emerald-500/10 border-emerald-500/30"
+                          : "bg-blue-500/10 border-blue-500/30"
                       }`}
                     >
-                      <p className="text-sm font-medium text-gray-900">
+                      <p className="text-sm font-medium text-white">
                         {alert.message}
                       </p>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-xs text-zinc-400 mt-1">
                         {format(
                           new Date(alert.created_at),
                           "MMM d, yyyy h:mm a"
@@ -382,21 +382,21 @@ export function ProductDetailClient({
             </CardHeader>
             <CardContent>
               {priceHistory.length === 0 ? (
-                <p className="text-gray-500 text-sm">
+                <p className="text-zinc-400 text-sm">
                   No price history recorded yet.
                 </p>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-gray-200">
-                        <th className="text-left py-2 font-medium text-gray-500">
+                      <tr className="border-b border-zinc-700">
+                        <th className="text-left py-2 font-medium text-zinc-400">
                           Date
                         </th>
-                        <th className="text-right py-2 font-medium text-gray-500">
+                        <th className="text-right py-2 font-medium text-zinc-400">
                           Price
                         </th>
-                        <th className="text-right py-2 font-medium text-gray-500">
+                        <th className="text-right py-2 font-medium text-zinc-400">
                           Change
                         </th>
                       </tr>
@@ -410,15 +410,15 @@ export function ProductDetailClient({
                         return (
                           <tr
                             key={record.id}
-                            className="border-b border-gray-100"
+                            className="border-b border-zinc-800"
                           >
-                            <td className="py-2 text-gray-600">
+                            <td className="py-2 text-zinc-300">
                               {format(
                                 new Date(record.created_at),
                                 "MMM d, yyyy h:mm a"
                               )}
                             </td>
-                            <td className="py-2 text-right font-medium">
+                            <td className="py-2 text-right font-medium text-white">
                               {formatPrice(record.price, currency)}
                             </td>
                             <td className="py-2 text-right">
@@ -426,17 +426,17 @@ export function ProductDetailClient({
                                 <span
                                   className={
                                     change < 0
-                                      ? "text-emerald-600"
+                                      ? "text-emerald-400"
                                       : change > 0
-                                        ? "text-red-600"
-                                        : "text-gray-400"
+                                        ? "text-red-400"
+                                        : "text-zinc-500"
                                   }
                                 >
                                   {change < 0 ? "↓" : change > 0 ? "↑" : "—"} {getCurrencySymbol(currency)}
                                   {Math.abs(change).toFixed(2)}
                                 </span>
                               ) : (
-                                <span className="text-gray-400">—</span>
+                                <span className="text-zinc-500">—</span>
                               )}
                             </td>
                           </tr>

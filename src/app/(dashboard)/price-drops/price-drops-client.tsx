@@ -38,26 +38,26 @@ export function PriceDropsClient({ products, totalSavings, currency = "USD" }: P
     <div className="p-6 max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-          <TrendingDown className="h-6 w-6 text-emerald-600" />
+        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <TrendingDown className="h-6 w-6 text-emerald-500" />
           Price Drops
         </h1>
-        <p className="text-gray-500 mt-1">
+        <p className="text-zinc-400 mt-1">
           Products that have dropped in price since you started tracking
         </p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <Card className="bg-emerald-50 border-emerald-200">
+        <Card className="bg-emerald-500/10 border-emerald-500/30">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-emerald-100 rounded-lg">
-                <DollarSign className="h-5 w-5 text-emerald-600" />
+              <div className="p-2 bg-emerald-500/20 rounded-lg">
+                <DollarSign className="h-5 w-5 text-emerald-400" />
               </div>
               <div>
-                <p className="text-sm text-emerald-600 font-medium">Total Savings</p>
-                <p className="text-2xl font-bold text-emerald-700">
+                <p className="text-sm text-emerald-400 font-medium">Total Savings</p>
+                <p className="text-2xl font-bold text-emerald-400">
                   {formatPrice(totalSavings, currency)}
                 </p>
               </div>
@@ -68,12 +68,12 @@ export function PriceDropsClient({ products, totalSavings, currency = "USD" }: P
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <TrendingDown className="h-5 w-5 text-blue-600" />
+              <div className="p-2 bg-blue-500/20 rounded-lg">
+                <TrendingDown className="h-5 w-5 text-blue-400" />
               </div>
               <div>
-                <p className="text-sm text-gray-500 font-medium">Price Drops</p>
-                <p className="text-2xl font-bold text-gray-900">{products.length}</p>
+                <p className="text-sm text-zinc-400 font-medium">Price Drops</p>
+                <p className="text-2xl font-bold text-white">{products.length}</p>
               </div>
             </div>
           </CardContent>
@@ -82,12 +82,12 @@ export function PriceDropsClient({ products, totalSavings, currency = "USD" }: P
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Sparkles className="h-5 w-5 text-purple-600" />
+              <div className="p-2 bg-purple-500/20 rounded-lg">
+                <Sparkles className="h-5 w-5 text-purple-400" />
               </div>
               <div>
-                <p className="text-sm text-gray-500 font-medium">Avg. Discount</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-sm text-zinc-400 font-medium">Avg. Discount</p>
+                <p className="text-2xl font-bold text-white">
                   {products.length > 0
                     ? `${(
                         (products.reduce(
@@ -110,11 +110,11 @@ export function PriceDropsClient({ products, totalSavings, currency = "USD" }: P
       {products.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <Package className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <Package className="h-12 w-12 text-zinc-600 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-white mb-2">
               No price drops yet
             </h3>
-            <p className="text-gray-500 mb-4">
+            <p className="text-zinc-400 mb-4">
               Keep tracking products and we&apos;ll show you when prices drop!
             </p>
             <Link href="/dashboard">
@@ -143,7 +143,7 @@ export function PriceDropsClient({ products, totalSavings, currency = "USD" }: P
                     <CardContent className="p-4">
                       <div className="flex gap-4">
                         {/* Image */}
-                        <div className="relative w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                        <div className="relative w-24 h-24 bg-zinc-800 rounded-lg overflow-hidden flex-shrink-0">
                           {getValidImageUrl(product.image_url) ? (
                             <Image
                               src={getValidImageUrl(product.image_url)!}
@@ -154,7 +154,7 @@ export function PriceDropsClient({ products, totalSavings, currency = "USD" }: P
                             />
                           ) : (
                             <div className="flex items-center justify-center h-full">
-                              <Package className="h-8 w-8 text-gray-300" />
+                              <Package className="h-8 w-8 text-zinc-600" />
                             </div>
                           )}
                         </div>
@@ -163,16 +163,16 @@ export function PriceDropsClient({ products, totalSavings, currency = "USD" }: P
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between gap-4">
                             <div className="min-w-0">
-                              <h3 className="font-medium text-gray-900 line-clamp-2 mb-1">
+                              <h3 className="font-medium text-white line-clamp-2 mb-1">
                                 {product.name}
                               </h3>
-                              <p className="text-xs text-gray-500 capitalize">
+                              <p className="text-xs text-zinc-400 capitalize">
                                 {product.retailer}
                               </p>
                             </div>
 
                             {/* Discount Badge */}
-                            <div className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full flex items-center gap-1 flex-shrink-0">
+                            <div className="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full flex items-center gap-1 flex-shrink-0">
                               <TrendingDown className="h-4 w-4" />
                               <span className="font-bold">{percentOff.toFixed(0)}% off</span>
                             </div>
@@ -180,20 +180,20 @@ export function PriceDropsClient({ products, totalSavings, currency = "USD" }: P
 
                           {/* Prices */}
                           <div className="flex items-center gap-3 mt-3">
-                            <span className="text-2xl font-bold text-emerald-600">
+                            <span className="text-2xl font-bold text-emerald-400">
                               {formatPrice(product.current_price, currency)}
                             </span>
-                            <span className="text-lg text-gray-400 line-through">
+                            <span className="text-lg text-zinc-500 line-through">
                               {formatPrice(product.original_price, currency)}
                             </span>
-                            <span className="text-sm text-emerald-600 font-medium">
+                            <span className="text-sm text-emerald-400 font-medium">
                               Save {formatPrice(savings, currency)}
                             </span>
                           </div>
 
                           {/* Actions */}
                           <div className="flex items-center justify-between mt-3">
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-zinc-500">
                               {product.last_checked
                                 ? `Updated ${formatDistanceToNow(new Date(product.last_checked), { addSuffix: true })}`
                                 : ""}
