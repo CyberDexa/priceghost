@@ -198,16 +198,17 @@ export function PriceDropsClient({ products, totalSavings, currency = "USD" }: P
                                 ? `Updated ${formatDistanceToNow(new Date(product.last_checked), { addSuffix: true })}`
                                 : ""}
                             </span>
-                            <a
-                              href={product.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                window.open(product.url, '_blank', 'noopener,noreferrer');
+                              }}
                               className="inline-flex items-center gap-1 text-sm text-emerald-600 hover:text-emerald-700 font-medium"
                             >
                               Buy Now
                               <ExternalLink className="h-3 w-3" />
-                            </a>
+                            </button>
                           </div>
                         </div>
                       </div>
