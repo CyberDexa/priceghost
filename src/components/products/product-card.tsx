@@ -10,7 +10,9 @@ import {
   TrendingUp,
   MoreVertical,
   Trash2,
-  RefreshCw
+  RefreshCw,
+  Store,
+  Clock
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useState } from "react";
@@ -22,26 +24,16 @@ interface ProductCardProps {
   currency?: string;
 }
 
-const retailerLogos: Record<string, string> = {
-  amazon: "🛒",
-  walmart: "🏪",
-  bestbuy: "🔵",
-  target: "🎯",
-  ebay: "📦",
-  costco: "🏬",
-  aliexpress: "🌐",
-  temu: "🛍️",
-  newegg: "💻",
-  homedepot: "🔨",
-  lowes: "🏠",
-  wayfair: "🪑",
-  etsy: "🎨",
-  argos: "🇬🇧",
-  currys: "📱",
-  johnlewis: "🏷️",
-  ao: "🔌",
-  very: "✨",
-  unknown: "🛍️",
+// SVG icons for retailers
+const RetailerIcon = ({ retailer }: { retailer: string }) => {
+  const iconClasses = "h-4 w-4";
+  
+  // Return a store icon as fallback - in production you'd have actual retailer logos
+  return (
+    <div className="flex items-center justify-center w-6 h-6 rounded-md bg-zinc-800 text-zinc-400">
+      <Store className={iconClasses} />
+    </div>
+  );
 };
 
 export function ProductCard({ product, currency = "USD" }: ProductCardProps) {
@@ -82,21 +74,30 @@ export function ProductCard({ product, currency = "USD" }: ProductCardProps) {
 
   return (
     <Link href={"/products/" + product.id}>
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden cursor-pointer">
-        <div className="flex">
+      <div className="group relative rounded-2xl border border-zinc-800/50 bg-gradient-to-b from-zinc-900/90 to-zinc-900/50 backdrop-blur-xl shadow-xl shadow-black/20 overflow-hidden transition-all duration-300 hover:border-zinc-700/80 hover:shadow-2xl hover:shadow-black/30 hover:-translate-y-1 cursor-pointer">
+        {/* Glow effect on hover */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/5 to-transparent" />
+        </div>
+
+        <div className="relative flex">
           {/* Product Image */}
-          <div className="w-32 h-32 sm:w-40 sm:h-40 relative bg-gray-100 flex-shrink-0">
+          <div className="w-32 h-32 sm:w-40 sm:h-40 relative flex-shrink-0 bg-zinc-900/50">
             {product.image_url ? (
-              <Image
-                src={product.image_url}
-                alt={product.name}
-                fill
-                className="object-contain p-2"
-                sizes="(max-width: 640px) 128px, 160px"
-              />
+              <>
+                <Image
+                  src={product.image_url}
+                  alt={product.name}
+                  fill
+                  className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
+                  sizes="(max-width: 640px) 128px, 160px"
+                />
+                {/* Image overlay gradient */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-zinc-900/20" />
+              </>
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-4xl">
-                {retailerLogos[product.retailer] || "🛍️"}
+              <div className="w-full h-full flex items-center justify-center">
+                <Store className="h-10 w-10 text-zinc-700" />
               </div>
             )}
           </div>
@@ -105,11 +106,13 @@ export function ProductCard({ product, currency = "USD" }: ProductCardProps) {
           <div className="flex-1 p-4 flex flex-col min-w-0">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-lg">{retailerLogos[product.retailer] || "🛍️"}</span>
-                  <span className="text-xs text-gray-500 capitalize">{product.retailer}</span>
+                <div className="flex items-center gap-2 mb-2">
+                  <RetailerIcon retailer={product.retailer} />
+                  <span className="text-xs font-medium text-zinc-500 capitalize tracking-wide">
+                    {product.retailer}
+                  </span>
                 </div>
-                <h3 className="font-medium text-gray-900 line-clamp-2 text-sm sm:text-base">
+                <h3 className="font-semibold text-zinc-100 line-clamp-2 text-sm sm:text-base leading-snug group-hover:text-white transition-colors">
                   {product.name}
                 </h3>
               </div>
@@ -122,9 +125,9 @@ export function ProductCard({ product, currency = "USD" }: ProductCardProps) {
                     e.stopPropagation();
                     setShowMenu(!showMenu);
                   }}
-                  className="p-1 hover:bg-gray-100 rounded"
+                  className="p-2 hover:bg-zinc-800 rounded-lg transition-colors cursor-pointer"
                 >
-                  <MoreVertical className="h-4 w-4 text-gray-400" />
+                  <MoreVertical className="h-4 w-4 text-zinc-500" />
                 </button>
                 {showMenu && (
                   <>
@@ -136,13 +139,13 @@ export function ProductCard({ product, currency = "USD" }: ProductCardProps) {
                         setShowMenu(false);
                       }} 
                     />
-                    <div className="absolute right-0 top-full mt-1 w-36 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-20">
+                    <div className="absolute right-0 top-full mt-1 w-40 bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl shadow-black/40 py-1.5 z-20 animate-scale-in">
                       <a
                         href={product.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors cursor-pointer"
                       >
                         <ExternalLink className="h-4 w-4" />
                         Visit Store
@@ -150,7 +153,7 @@ export function ProductCard({ product, currency = "USD" }: ProductCardProps) {
                       <button
                         onClick={handleDelete}
                         disabled={isDeleting}
-                        className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 w-full"
+                        className="flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 w-full transition-colors cursor-pointer"
                       >
                         <Trash2 className="h-4 w-4" />
                         {isDeleting ? "Deleting..." : "Delete"}
@@ -163,13 +166,14 @@ export function ProductCard({ product, currency = "USD" }: ProductCardProps) {
 
             {/* Price */}
             <div className="mt-auto pt-3">
-              <div className="flex items-end justify-between">
+              <div className="flex items-end justify-between gap-3">
                 <div>
-                  <div className="text-xl sm:text-2xl font-bold text-gray-900">
+                  <div className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
                     {formatPrice(product.current_price)}
                   </div>
                   {product.target_price && (
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-zinc-500 mt-1 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
                       Target: {formatPrice(product.target_price)}
                     </div>
                   )}
@@ -179,16 +183,16 @@ export function ProductCard({ product, currency = "USD" }: ProductCardProps) {
                 {priceChange !== 0 && (
                   <div
                     className={cn(
-                      "flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium",
+                      "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all",
                       priceChange < 0
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
+                        ? "bg-emerald-500/15 text-emerald-400 shadow-lg shadow-emerald-500/10"
+                        : "bg-red-500/15 text-red-400 shadow-lg shadow-red-500/10"
                     )}
                   >
                     {priceChange < 0 ? (
-                      <TrendingDown className="h-3 w-3" />
+                      <TrendingDown className="h-3.5 w-3.5" />
                     ) : (
-                      <TrendingUp className="h-3 w-3" />
+                      <TrendingUp className="h-3.5 w-3.5" />
                     )}
                     {Math.abs(priceChange).toFixed(1)}%
                   </div>
@@ -197,8 +201,8 @@ export function ProductCard({ product, currency = "USD" }: ProductCardProps) {
 
               {/* Last checked */}
               {product.last_checked && (
-                <div className="text-xs text-gray-400 mt-2 flex items-center gap-1">
-                  <RefreshCw className="h-3 w-3" />
+                <div className="text-xs text-zinc-600 mt-3 flex items-center gap-1.5">
+                  <Clock className="h-3 w-3" />
                   Updated {formatDistanceToNow(new Date(product.last_checked), { addSuffix: true })}
                 </div>
               )}

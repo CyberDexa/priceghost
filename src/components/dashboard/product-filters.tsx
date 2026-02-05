@@ -77,11 +77,11 @@ export function ProductFilters({
     filters.status !== "all";
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6">
+    <div className="rounded-2xl border border-zinc-800/50 bg-gradient-to-b from-zinc-900/90 to-zinc-900/50 backdrop-blur-xl p-4 mb-6">
       {/* Search and basic controls */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-4 w-4 text-zinc-500" />
           <Input
             type="text"
             placeholder="Search products..."
@@ -95,7 +95,7 @@ export function ProductFilters({
           <select
             value={filters.sortBy}
             onChange={(e) => handleFilterChange("sortBy", e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            className="px-4 py-2.5 bg-zinc-900/50 border border-zinc-800 rounded-xl text-sm text-zinc-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all cursor-pointer hover:border-zinc-700"
           >
             {sortOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -119,7 +119,7 @@ export function ProductFilters({
           </Button>
 
           {hasActiveFilters && (
-            <Button variant="ghost" onClick={clearFilters} className="text-gray-500">
+            <Button variant="ghost" onClick={clearFilters} className="text-zinc-400 hover:text-red-400">
               <X className="h-4 w-4 mr-1" />
               Clear
             </Button>
@@ -129,16 +129,16 @@ export function ProductFilters({
 
       {/* Expanded filters */}
       {isExpanded && (
-        <div className="mt-4 pt-4 border-t border-gray-200 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="mt-4 pt-4 border-t border-zinc-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in-up">
           {/* Retailer filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-zinc-400 mb-2">
               Retailer
             </label>
             <select
               value={filters.retailer}
               onChange={(e) => handleFilterChange("retailer", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full px-4 py-2.5 bg-zinc-900/50 border border-zinc-800 rounded-xl text-sm text-zinc-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all cursor-pointer hover:border-zinc-700"
             >
               {retailers.map((retailer) => (
                 <option key={retailer.value} value={retailer.value}>
@@ -150,7 +150,7 @@ export function ProductFilters({
 
           {/* Price range */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-zinc-400 mb-2">
               Min Price
             </label>
             <Input
@@ -163,7 +163,7 @@ export function ProductFilters({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-zinc-400 mb-2">
               Max Price
             </label>
             <Input
@@ -177,13 +177,13 @@ export function ProductFilters({
 
           {/* Status filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-zinc-400 mb-2">
               Status
             </label>
             <select
               value={filters.status}
               onChange={(e) => handleFilterChange("status", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full px-4 py-2.5 bg-zinc-900/50 border border-zinc-800 rounded-xl text-sm text-zinc-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all cursor-pointer hover:border-zinc-700"
             >
               <option value="all">All Products</option>
               <option value="active">Active Tracking</option>
@@ -195,9 +195,9 @@ export function ProductFilters({
       )}
 
       {/* Results count */}
-      <div className="mt-3 text-sm text-gray-500">
-        Showing {filteredCount} of {totalProducts} products
-        {hasActiveFilters && " (filtered)"}
+      <div className="mt-3 text-sm text-zinc-500">
+        Showing <span className="text-zinc-300 font-medium">{filteredCount}</span> of {totalProducts} products
+        {hasActiveFilters && <span className="text-emerald-400 ml-1">(filtered)</span>}
       </div>
     </div>
   );

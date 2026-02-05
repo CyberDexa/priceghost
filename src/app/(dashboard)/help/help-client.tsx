@@ -137,8 +137,8 @@ export function HelpClient() {
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto">
-        <div className="w-16 h-16 mx-auto bg-indigo-500/20 rounded-2xl flex items-center justify-center mb-4">
-          <HelpCircle className="w-8 h-8 text-indigo-400" />
+        <div className="w-16 h-16 mx-auto bg-emerald-500/20 rounded-2xl flex items-center justify-center mb-4">
+          <HelpCircle className="w-8 h-8 text-emerald-400" />
         </div>
         <h1 className="text-3xl font-bold text-white mb-3">Help Center</h1>
         <p className="text-zinc-400">
@@ -155,7 +155,7 @@ export function HelpClient() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search for help..."
-            className="w-full pl-12 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+            className="w-full pl-12 pr-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
           />
         </div>
       </div>
@@ -169,9 +169,9 @@ export function HelpClient() {
             <button
               key={category.name}
               onClick={() => setActiveCategory(isActive ? null : category.name)}
-              className={`p-4 rounded-xl border transition-all ${
+              className={`p-4 rounded-xl border transition-all cursor-pointer ${
                 isActive
-                  ? 'bg-indigo-500/20 border-indigo-500/30 text-indigo-400'
+                  ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400'
                   : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-700'
               }`}
             >
@@ -204,11 +204,11 @@ export function HelpClient() {
                 <div key={index} className="group">
                   <button
                     onClick={() => toggleQuestion(index)}
-                    className="w-full flex items-start gap-3 p-4 text-left hover:bg-zinc-800/50 transition-colors"
+                    className="w-full flex items-start gap-3 p-4 text-left hover:bg-zinc-800/50 transition-colors cursor-pointer"
                   >
                     <span className="flex-shrink-0 mt-1">
                       {isExpanded ? (
-                        <ChevronDown className="w-4 h-4 text-indigo-400" />
+                        <ChevronDown className="w-4 h-4 text-emerald-400" />
                       ) : (
                         <ChevronRight className="w-4 h-4 text-zinc-500" />
                       )}
@@ -239,7 +239,7 @@ export function HelpClient() {
                 setSearchQuery('');
                 setActiveCategory(null);
               }}
-              className="mt-2 text-indigo-400 hover:text-indigo-300 text-sm"
+              className="mt-2 text-emerald-400 hover:text-emerald-300 text-sm cursor-pointer"
             >
               Clear filters
             </button>
@@ -261,7 +261,7 @@ export function HelpClient() {
           </p>
           <a
             href="mailto:support@priceghost.app"
-            className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 transition-colors"
+            className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors"
           >
             support@priceghost.app
             <ExternalLink className="w-4 h-4" />
@@ -280,7 +280,7 @@ export function HelpClient() {
           </p>
           <a
             href="mailto:feedback@priceghost.app"
-            className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 transition-colors"
+            className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors"
           >
             feedback@priceghost.app
             <ExternalLink className="w-4 h-4" />
@@ -296,8 +296,8 @@ export function HelpClient() {
             href="/dashboard"
             className="group p-4 bg-zinc-800/50 rounded-lg hover:bg-zinc-800 transition-colors"
           >
-            <Package className="w-8 h-8 text-indigo-400 mb-3" />
-            <h4 className="font-medium text-white group-hover:text-indigo-400 transition-colors">
+            <Package className="w-8 h-8 text-emerald-400 mb-3" />
+            <h4 className="font-medium text-white group-hover:text-emerald-400 transition-colors">
               Add Your First Product
             </h4>
             <p className="text-sm text-zinc-500 mt-1">

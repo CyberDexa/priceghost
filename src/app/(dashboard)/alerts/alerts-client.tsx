@@ -68,23 +68,23 @@ export function AlertsClient({ alerts: initialAlerts }: AlertsClientProps) {
   const getAlertIcon = (type: string) => {
     switch (type) {
       case "price_drop":
-        return <TrendingDown className="h-5 w-5 text-emerald-600" />;
+        return <TrendingDown className="h-5 w-5 text-emerald-400" />;
       case "target_reached":
-        return <Target className="h-5 w-5 text-blue-600" />;
+        return <Target className="h-5 w-5 text-blue-400" />;
       default:
-        return <Bell className="h-5 w-5 text-gray-600" />;
+        return <Bell className="h-5 w-5 text-zinc-400" />;
     }
   };
 
   const getAlertBg = (type: string, isRead: boolean) => {
-    if (isRead) return "bg-white";
+    if (isRead) return "bg-zinc-900/50";
     switch (type) {
       case "price_drop":
-        return "bg-emerald-50";
+        return "bg-emerald-500/10 border-emerald-500/20";
       case "target_reached":
-        return "bg-blue-50";
+        return "bg-blue-500/10 border-blue-500/20";
       default:
-        return "bg-gray-50";
+        return "bg-zinc-800/50";
     }
   };
 
@@ -92,8 +92,8 @@ export function AlertsClient({ alerts: initialAlerts }: AlertsClientProps) {
     <div className="p-6 max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Alerts</h1>
-          <p className="text-gray-500">
+          <h1 className="text-2xl font-bold text-white">Alerts</h1>
+          <p className="text-zinc-400">
             {unreadCount > 0
               ? `${unreadCount} unread alert${unreadCount !== 1 ? "s" : ""}`
               : "All caught up!"}
@@ -101,7 +101,7 @@ export function AlertsClient({ alerts: initialAlerts }: AlertsClientProps) {
         </div>
         {unreadCount > 0 && (
           <Button
-            variant="outline"
+            variant="ghost"
             onClick={markAllAsRead}
             disabled={isMarkingAll}
           >
@@ -114,11 +114,11 @@ export function AlertsClient({ alerts: initialAlerts }: AlertsClientProps) {
       {alerts.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <BellOff className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <BellOff className="h-12 w-12 text-zinc-600 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-white mb-2">
               No alerts yet
             </h3>
-            <p className="text-gray-500 mb-4">
+            <p className="text-zinc-400 mb-4">
               We&apos;ll notify you when prices drop on your tracked products.
             </p>
             <Link href="/dashboard">
@@ -136,7 +136,7 @@ export function AlertsClient({ alerts: initialAlerts }: AlertsClientProps) {
               <CardContent className="p-4">
                 <div className="flex gap-4">
                   {/* Product Image */}
-                  <div className="relative w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                  <div className="relative w-16 h-16 bg-zinc-800 rounded-lg overflow-hidden flex-shrink-0">
                     {alert.products?.image_url ? (
                       <Image
                         src={alert.products.image_url}
@@ -147,7 +147,7 @@ export function AlertsClient({ alerts: initialAlerts }: AlertsClientProps) {
                       />
                     ) : (
                       <div className="flex items-center justify-center h-full">
-                        <Package className="h-6 w-6 text-gray-300" />
+                        <Package className="h-6 w-6 text-zinc-600" />
                       </div>
                     )}
                   </div>
@@ -160,10 +160,10 @@ export function AlertsClient({ alerts: initialAlerts }: AlertsClientProps) {
                         <span
                           className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                             alert.alert_type === "price_drop"
-                              ? "bg-emerald-100 text-emerald-700"
+                              ? "bg-emerald-500/20 text-emerald-400"
                               : alert.alert_type === "target_reached"
-                                ? "bg-blue-100 text-blue-700"
-                                : "bg-gray-100 text-gray-700"
+                                ? "bg-blue-500/20 text-blue-400"
+                                : "bg-zinc-700 text-zinc-300"
                           }`}
                         >
                           {alert.alert_type === "price_drop"
@@ -179,23 +179,23 @@ export function AlertsClient({ alerts: initialAlerts }: AlertsClientProps) {
                           variant="ghost"
                           size="sm"
                           onClick={() => markAsRead(alert.id)}
-                          className="text-gray-500"
+                          className="text-zinc-400"
                         >
                           <Check className="h-4 w-4" />
                         </Button>
                       )}
                     </div>
 
-                    <p className="text-sm text-gray-900 mt-2">{alert.message}</p>
+                    <p className="text-sm text-white mt-2">{alert.message}</p>
 
                     {alert.products && (
-                      <p className="text-xs text-gray-500 mt-1 truncate">
+                      <p className="text-xs text-zinc-500 mt-1 truncate">
                         {alert.products.name}
                       </p>
                     )}
 
                     <div className="flex items-center justify-between mt-3">
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-zinc-500">
                         {format(
                           new Date(alert.created_at),
                           "MMM d, yyyy h:mm a"
@@ -215,7 +215,7 @@ export function AlertsClient({ alerts: initialAlerts }: AlertsClientProps) {
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              <Button variant="outline" size="sm">
+                              <Button variant="glass" size="sm">
                                 <ExternalLink className="h-3 w-3 mr-1" />
                                 Buy Now
                               </Button>

@@ -260,9 +260,9 @@ export function AnalyticsClient() {
             <button
               key={range}
               onClick={() => setTimeRange(range)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                 timeRange === range
-                  ? 'bg-indigo-600 text-white'
+                  ? 'bg-emerald-600 text-white'
                   : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
               }`}
             >
@@ -314,7 +314,7 @@ export function AnalyticsClient() {
         {/* Price Trends Chart */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
           <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <BarChart3 className="w-5 h-5 text-indigo-400" />
+            <BarChart3 className="w-5 h-5 text-emerald-400" />
             Price Trends
           </h3>
           {priceHistory.length > 0 ? (
@@ -322,8 +322,8 @@ export function AnalyticsClient() {
               <AreaChart data={priceHistory}>
                 <defs>
                   <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
@@ -341,7 +341,7 @@ export function AnalyticsClient() {
                 <Area
                   type="monotone"
                   dataKey="avgPrice"
-                  stroke="#6366f1"
+                  stroke="#10b981"
                   strokeWidth={2}
                   fill="url(#colorPrice)"
                 />
@@ -491,7 +491,7 @@ interface StatCardProps {
 
 function StatCard({ title, value, icon: Icon, description, color }: StatCardProps) {
   const colorClasses = {
-    indigo: 'bg-indigo-500/10 text-indigo-400',
+    indigo: 'bg-emerald-500/10 text-emerald-400',
     green: 'bg-green-500/10 text-green-400',
     emerald: 'bg-emerald-500/10 text-emerald-400',
     amber: 'bg-amber-500/10 text-amber-400',

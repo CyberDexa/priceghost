@@ -9,7 +9,7 @@ interface PageLoaderProps {
 export function PageLoader({ message = 'Loading...' }: PageLoaderProps) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh]">
-      <Loader2 className="w-8 h-8 text-indigo-500 animate-spin mb-4" />
+      <Loader2 className="w-8 h-8 text-emerald-500 animate-spin mb-4" />
       <p className="text-zinc-400">{message}</p>
     </div>
   );
@@ -22,7 +22,7 @@ interface SectionLoaderProps {
 export function SectionLoader({ className = '' }: SectionLoaderProps) {
   return (
     <div className={`flex items-center justify-center py-12 ${className}`}>
-      <Loader2 className="w-6 h-6 text-indigo-500 animate-spin" />
+      <Loader2 className="w-6 h-6 text-emerald-500 animate-spin" />
     </div>
   );
 }
@@ -38,7 +38,7 @@ export function InlineLoader({ size = 'md' }: InlineLoaderProps) {
     lg: 'w-6 h-6',
   };
 
-  return <Loader2 className={`${sizeClasses[size]} text-indigo-500 animate-spin`} />;
+  return <Loader2 className={`${sizeClasses[size]} text-emerald-500 animate-spin`} />;
 }
 
 interface ButtonLoaderProps {

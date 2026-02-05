@@ -86,23 +86,23 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
   };
 
   const retailerColors: Record<string, string> = {
-    amazon: "bg-orange-100 text-orange-700",
-    walmart: "bg-blue-100 text-blue-700",
-    bestbuy: "bg-yellow-100 text-yellow-700",
-    target: "bg-red-100 text-red-700",
-    ebay: "bg-purple-100 text-purple-700",
-    unknown: "bg-gray-100 text-gray-700",
+    amazon: "bg-orange-500/20 text-orange-400",
+    walmart: "bg-blue-500/20 text-blue-400",
+    bestbuy: "bg-yellow-500/20 text-yellow-400",
+    target: "bg-red-500/20 text-red-400",
+    ebay: "bg-purple-500/20 text-purple-400",
+    unknown: "bg-zinc-700 text-zinc-300",
   };
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-          <ArrowUpDown className="h-6 w-6 text-emerald-600" />
+        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <ArrowUpDown className="h-6 w-6 text-emerald-400" />
           Compare Prices
         </h1>
-        <p className="text-gray-500 mt-1">
+        <p className="text-zinc-400 mt-1">
           Select products to compare prices across different retailers
         </p>
       </div>
@@ -112,9 +112,9 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
         <div className="lg:col-span-1">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Select Products</CardTitle>
+              <CardTitle className="text-base text-white">Select Products</CardTitle>
               <div className="relative mt-2">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
                 <Input
                   placeholder="Search products..."
                   value={searchQuery}
@@ -125,7 +125,7 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
             </CardHeader>
             <CardContent className="max-h-[500px] overflow-y-auto">
               {filteredProducts.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-zinc-500">
                   <Package className="h-8 w-8 mx-auto mb-2 opacity-50" />
                   <p className="text-sm">No products found</p>
                 </div>
@@ -137,10 +137,10 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
                       <button
                         key={product.id}
                         onClick={() => toggleProduct(product.id)}
-                        className={`w-full text-left p-3 rounded-lg border transition-all ${
+                        className={`w-full text-left p-3 rounded-lg border transition-all cursor-pointer ${
                           isSelected
-                            ? "border-emerald-500 bg-emerald-50"
-                            : "border-gray-200 hover:border-gray-300"
+                            ? "border-emerald-500 bg-emerald-500/10"
+                            : "border-zinc-700 hover:border-zinc-600 bg-zinc-800/50"
                         }`}
                       >
                         <div className="flex items-center gap-3">
@@ -148,7 +148,7 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
                             className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
                               isSelected
                                 ? "bg-emerald-500 border-emerald-500"
-                                : "border-gray-300"
+                                : "border-zinc-600"
                             }`}
                           >
                             {isSelected && (
@@ -156,7 +156,7 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
                             )}
                           </div>
                           <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium text-gray-900 truncate">
+                            <p className="text-sm font-medium text-white truncate">
                               {product.name}
                             </p>
                             <div className="flex items-center gap-2 mt-1">
@@ -168,7 +168,7 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
                               >
                                 {product.retailer}
                               </span>
-                              <span className="text-sm font-semibold text-gray-900">
+                              <span className="text-sm font-semibold text-white">
                                 {product.current_price ? formatPrice(product.current_price, currency) : "N/A"}
                               </span>
                             </div>
@@ -187,7 +187,7 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
         <div className="lg:col-span-2">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-3">
-              <CardTitle className="text-base">
+              <CardTitle className="text-base text-white">
                 Comparison ({comparedProducts.length} products)
               </CardTitle>
               <div className="flex items-center gap-2">
@@ -196,7 +196,7 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
                   onChange={(e) =>
                     setSortBy(e.target.value as "price" | "name" | "retailer")
                   }
-                  className="text-sm border border-gray-200 rounded-lg px-2 py-1"
+                  className="text-sm bg-zinc-800 border border-zinc-700 text-zinc-300 rounded-lg px-2 py-1 cursor-pointer"
                 >
                   <option value="price">Sort by Price</option>
                   <option value="name">Sort by Name</option>
@@ -211,9 +211,9 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
             </CardHeader>
             <CardContent>
               {comparedProducts.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">
+                <div className="text-center py-12 text-zinc-500">
                   <ArrowUpDown className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                  <p className="font-medium">No products selected</p>
+                  <p className="font-medium text-zinc-400">No products selected</p>
                   <p className="text-sm mt-1">
                     Select products from the list to compare prices
                   </p>
@@ -222,14 +222,14 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
                 <div className="space-y-4">
                   {/* Best Deal Banner */}
                   {bestDeal && comparedProducts.length > 1 && (
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 flex items-center justify-between">
+                    <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-4 flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <TrendingDown className="h-5 w-5 text-emerald-600" />
+                        <TrendingDown className="h-5 w-5 text-emerald-400" />
                         <div>
-                          <p className="font-medium text-emerald-800">
+                          <p className="font-medium text-emerald-400">
                             Best Deal Found!
                           </p>
-                          <p className="text-sm text-emerald-600">
+                          <p className="text-sm text-emerald-300/80">
                             {bestDeal.retailer} has the lowest price at {bestDeal.current_price ? formatPrice(bestDeal.current_price, currency) : "N/A"}
                           </p>
                         </div>
@@ -251,20 +251,20 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
-                        <tr className="border-b border-gray-200">
-                          <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
+                        <tr className="border-b border-zinc-800">
+                          <th className="text-left py-3 px-4 text-sm font-medium text-zinc-400">
                             Product
                           </th>
-                          <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
+                          <th className="text-left py-3 px-4 text-sm font-medium text-zinc-400">
                             Retailer
                           </th>
-                          <th className="text-right py-3 px-4 text-sm font-medium text-gray-500">
+                          <th className="text-right py-3 px-4 text-sm font-medium text-zinc-400">
                             Current Price
                           </th>
-                          <th className="text-right py-3 px-4 text-sm font-medium text-gray-500">
+                          <th className="text-right py-3 px-4 text-sm font-medium text-zinc-400">
                             Lowest Price
                           </th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-gray-500">
+                          <th className="text-center py-3 px-4 text-sm font-medium text-zinc-400">
                             Actions
                           </th>
                         </tr>
@@ -275,13 +275,13 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
                           return (
                             <tr
                               key={product.id}
-                              className={`border-b border-gray-100 ${
-                                isBest ? "bg-emerald-50" : ""
+                              className={`border-b border-zinc-800/50 ${
+                                isBest ? "bg-emerald-500/5" : ""
                               }`}
                             >
                               <td className="py-3 px-4">
                                 <div className="flex items-center gap-3">
-                                  <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden relative flex-shrink-0">
+                                  <div className="w-12 h-12 bg-zinc-800 rounded-lg overflow-hidden relative flex-shrink-0">
                                     {product.image_url ? (
                                       <Image
                                         src={product.image_url}
@@ -292,14 +292,14 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
                                       />
                                     ) : (
                                       <div className="w-full h-full flex items-center justify-center">
-                                        <Package className="h-5 w-5 text-gray-300" />
+                                        <Package className="h-5 w-5 text-zinc-600" />
                                       </div>
                                     )}
                                   </div>
                                   <div className="min-w-0">
                                     <Link
                                       href={`/products/${product.id}`}
-                                      className="text-sm font-medium text-gray-900 hover:text-emerald-600 line-clamp-2"
+                                      className="text-sm font-medium text-white hover:text-emerald-400 line-clamp-2 transition-colors"
                                     >
                                       {product.name}
                                     </Link>
@@ -320,8 +320,8 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
                                 <span
                                   className={`font-bold ${
                                     isBest
-                                      ? "text-emerald-600 text-lg"
-                                      : "text-gray-900"
+                                      ? "text-emerald-400 text-lg"
+                                      : "text-white"
                                   }`}
                                 >
                                   {product.current_price ? formatPrice(product.current_price, currency) : "N/A"}
@@ -332,7 +332,7 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
                                   </span>
                                 )}
                               </td>
-                              <td className="py-3 px-4 text-right text-sm text-gray-500">
+                              <td className="py-3 px-4 text-right text-sm text-zinc-500">
                                 {product.lowest_price ? formatPrice(product.lowest_price, currency) : "—"}
                               </td>
                               <td className="py-3 px-4 text-center">
@@ -342,13 +342,13 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
                                     target="_blank"
                                     rel="noopener noreferrer"
                                   >
-                                    <Button variant="outline" size="sm">
+                                    <Button variant="ghost" size="sm">
                                       <ExternalLink className="h-3 w-3" />
                                     </Button>
                                   </a>
                                   <button
                                     onClick={() => toggleProduct(product.id)}
-                                    className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded"
+                                    className="p-1.5 text-zinc-500 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors cursor-pointer"
                                   >
                                     <X className="h-4 w-4" />
                                   </button>
@@ -363,9 +363,9 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
 
                   {/* Price Difference */}
                   {comparedProducts.length > 1 && (
-                    <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-600">
-                        <strong>Price Range:</strong> {getCurrencySymbol(currency)}
+                    <div className="mt-4 p-4 bg-zinc-800/50 rounded-lg border border-zinc-700">
+                      <p className="text-sm text-zinc-300">
+                        <strong className="text-white">Price Range:</strong> {getCurrencySymbol(currency)}
                         {Math.min(
                           ...comparedProducts
                             .filter((p) => p.current_price)
@@ -377,7 +377,7 @@ export function CompareClient({ products, currency = "USD" }: CompareClientProps
                             .filter((p) => p.current_price)
                             .map((p) => p.current_price!)
                         ).toFixed(2)}
-                        <span className="ml-2 text-emerald-600">
+                        <span className="ml-2 text-emerald-400">
                           (Potential savings: {getCurrencySymbol(currency)}
                           {(
                             Math.max(

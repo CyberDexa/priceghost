@@ -181,8 +181,8 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
   const Toggle = ({ enabled, onToggle }: { enabled: boolean; onToggle: () => void }) => (
     <button
       onClick={onToggle}
-      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-        enabled ? "bg-emerald-600" : "bg-gray-200"
+      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
+        enabled ? "bg-emerald-600" : "bg-zinc-700"
       }`}
     >
       <span
@@ -196,38 +196,38 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
   return (
     <div className="p-4 sm:p-6 max-w-2xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-        <p className="text-gray-500">Manage your account and preferences</p>
+        <h1 className="text-2xl font-bold text-white">Settings</h1>
+        <p className="text-zinc-400">Manage your account and preferences</p>
       </div>
 
       <div className="space-y-6">
         {/* Account Info */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="h-5 w-5 text-gray-500" />
+            <CardTitle className="flex items-center gap-2 text-white">
+              <User className="h-5 w-5 text-zinc-400" />
               Account
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-zinc-300">
                   Email Address
                 </label>
-                <Input value={user.email} disabled className="mt-1 bg-gray-50" />
+                <Input value={user.email} disabled className="mt-1 bg-zinc-800/50" />
               </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium text-gray-700">
+                  <label className="text-sm font-medium text-zinc-300">
                     <Globe className="h-4 w-4 inline mr-1" />
                     Timezone
                   </label>
                   <select
                     value={settings.timezone}
                     onChange={(e) => setSettings({ ...settings, timezone: e.target.value })}
-                    className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="mt-1 w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-zinc-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
                   >
                     {timezones.map((tz) => (
                       <option key={tz.value} value={tz.value}>{tz.label}</option>
@@ -236,13 +236,13 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
                 </div>
                 
                 <div>
-                  <label className="text-sm font-medium text-gray-700">
+                  <label className="text-sm font-medium text-zinc-300">
                     Currency
                   </label>
                   <select
                     value={settings.currency}
                     onChange={(e) => setSettings({ ...settings, currency: e.target.value })}
-                    className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="mt-1 w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-zinc-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
                   >
                     {currencies.map((c) => (
                       <option key={c.value} value={c.value}>{c.label}</option>
@@ -257,8 +257,8 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
         {/* Notification Settings */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Bell className="h-5 w-5 text-gray-500" />
+            <CardTitle className="flex items-center gap-2 text-white">
+              <Bell className="h-5 w-5 text-zinc-400" />
               Notifications
             </CardTitle>
           </CardHeader>
@@ -267,10 +267,10 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
               {/* Email Notifications Toggle */}
               <div className="flex items-center justify-between">
                 <div>
-                  <label className="text-sm font-medium text-gray-700">
+                  <label className="text-sm font-medium text-zinc-300">
                     Email Notifications
                   </label>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-zinc-500">
                     Receive email alerts when prices drop
                   </p>
                 </div>
@@ -284,17 +284,17 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
                 <>
                   {/* Notification Frequency */}
                   <div>
-                    <label className="text-sm font-medium text-gray-700">
+                    <label className="text-sm font-medium text-zinc-300">
                       <Mail className="h-4 w-4 inline mr-1" />
                       Alert Frequency
                     </label>
-                    <p className="text-xs text-gray-500 mb-2">
+                    <p className="text-xs text-zinc-500 mb-2">
                       How often you want to receive price drop alerts
                     </p>
                     <select
                       value={settings.notification_frequency}
                       onChange={(e) => setSettings({ ...settings, notification_frequency: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-zinc-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
                     >
                       <option value="instant">Instant (as they happen)</option>
                       <option value="daily">Daily digest</option>
@@ -305,10 +305,10 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
 
                   {/* Price Drop Threshold */}
                   <div>
-                    <label className="text-sm font-medium text-gray-700">
+                    <label className="text-sm font-medium text-zinc-300">
                       Price Drop Threshold
                     </label>
-                    <p className="text-xs text-gray-500 mb-2">
+                    <p className="text-xs text-zinc-500 mb-2">
                       Only notify when price drops by at least this percentage
                     </p>
                     <div className="flex items-center gap-2">
@@ -325,17 +325,17 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
                         }
                         className="w-24"
                       />
-                      <span className="text-sm text-gray-500">%</span>
+                      <span className="text-sm text-zinc-400">%</span>
                     </div>
                   </div>
 
                   {/* Quiet Hours */}
                   <div>
-                    <label className="text-sm font-medium text-gray-700">
+                    <label className="text-sm font-medium text-zinc-300">
                       <Moon className="h-4 w-4 inline mr-1" />
                       Quiet Hours (Optional)
                     </label>
-                    <p className="text-xs text-gray-500 mb-2">
+                    <p className="text-xs text-zinc-500 mb-2">
                       Don't send notifications during these hours
                     </p>
                     <div className="flex items-center gap-2">
@@ -345,7 +345,7 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
                           ...settings, 
                           quiet_hours_start: e.target.value ? parseInt(e.target.value) : null 
                         })}
-                        className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className="px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-zinc-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
                       >
                         <option value="">No quiet hours</option>
                         {Array.from({ length: 24 }, (_, i) => (
@@ -354,7 +354,7 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
                           </option>
                         ))}
                       </select>
-                      <span className="text-gray-500">to</span>
+                      <span className="text-zinc-400">to</span>
                       <select
                         value={settings.quiet_hours_end ?? ""}
                         onChange={(e) => setSettings({ 
@@ -362,7 +362,7 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
                           quiet_hours_end: e.target.value ? parseInt(e.target.value) : null 
                         })}
                         disabled={settings.quiet_hours_start === null}
-                        className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:bg-gray-100"
+                        className="px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-zinc-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:bg-zinc-900 disabled:text-zinc-600 cursor-pointer"
                       >
                         <option value="">--</option>
                         {Array.from({ length: 24 }, (_, i) => (
@@ -382,8 +382,8 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
         {/* Weekly Digest */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-gray-500" />
+            <CardTitle className="flex items-center gap-2 text-white">
+              <Calendar className="h-5 w-5 text-zinc-400" />
               Weekly Digest
             </CardTitle>
           </CardHeader>
@@ -391,10 +391,10 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <label className="text-sm font-medium text-gray-700">
+                  <label className="text-sm font-medium text-zinc-300">
                     Weekly Summary Email
                   </label>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-zinc-500">
                     Receive a weekly summary of all price changes
                   </p>
                 </div>
@@ -406,16 +406,16 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
 
               {settings.weekly_digest_enabled && (
                 <div>
-                  <label className="text-sm font-medium text-gray-700">
+                  <label className="text-sm font-medium text-zinc-300">
                     Delivery Day
                   </label>
-                  <p className="text-xs text-gray-500 mb-2">
+                  <p className="text-xs text-zinc-500 mb-2">
                     Which day do you want to receive your weekly digest?
                   </p>
                   <select
                     value={settings.weekly_digest_day}
                     onChange={(e) => setSettings({ ...settings, weekly_digest_day: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-zinc-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
                   >
                     {daysOfWeek.map((day) => (
                       <option key={day.value} value={day.value}>{day.label}</option>
@@ -430,23 +430,23 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
         {/* Price Checking */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="h-5 w-5 text-gray-500" />
+            <CardTitle className="flex items-center gap-2 text-white">
+              <Clock className="h-5 w-5 text-zinc-400" />
               Price Checking
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div>
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-sm font-medium text-zinc-300">
                 Check Frequency
               </label>
-              <p className="text-xs text-gray-500 mb-2">
+              <p className="text-xs text-zinc-500 mb-2">
                 How often we check prices for your products
               </p>
               <select
                 value={settings.check_frequency}
                 onChange={(e) => setSettings({ ...settings, check_frequency: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-zinc-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
               >
                 <option value="1h">Every hour</option>
                 <option value="6h">Every 6 hours</option>
@@ -464,14 +464,14 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
               {isSaving ? "Saving..." : "Save Preferences"}
             </Button>
             {saveSuccess && (
-              <span className="text-emerald-600 text-sm flex items-center gap-1">
+              <span className="text-emerald-400 text-sm flex items-center gap-1">
                 <CheckCircle className="h-4 w-4" />
                 Saved successfully!
               </span>
             )}
           </div>
           {error && (
-            <span className="text-red-600 text-sm">
+            <span className="text-red-400 text-sm">
               Error: {error}
             </span>
           )}
@@ -480,18 +480,18 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
         {/* Data Management */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Download className="h-5 w-5 text-gray-500" />
+            <CardTitle className="flex items-center gap-2 text-white">
+              <Download className="h-5 w-5 text-zinc-400" />
               Data Management
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <h4 className="text-sm font-medium text-gray-700 mb-2">Export Your Data</h4>
-              <p className="text-xs text-gray-500 mb-3">
+              <h4 className="text-sm font-medium text-zinc-300 mb-2">Export Your Data</h4>
+              <p className="text-xs text-zinc-500 mb-3">
                 Download all your tracked products and price history
               </p>
-              <Button variant="outline" onClick={handleExportData} disabled={isExporting}>
+              <Button variant="ghost" onClick={handleExportData} disabled={isExporting}>
                 <Download className="h-4 w-4 mr-2" />
                 {isExporting ? "Exporting..." : "Export Data (CSV)"}
               </Button>
@@ -500,9 +500,9 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
         </Card>
 
         {/* Security & Danger Zone */}
-        <Card className="border-red-200">
+        <Card className="border-red-500/30">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-red-600">
+            <CardTitle className="flex items-center gap-2 text-red-400">
               <Shield className="h-5 w-5" />
               Danger Zone
             </CardTitle>
@@ -510,7 +510,7 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
           <CardContent className="space-y-4">
             <div>
               <Button
-                variant="outline"
+                variant="ghost"
                 onClick={handleSignOut}
                 disabled={isSigningOut}
               >
@@ -519,16 +519,16 @@ export function SettingsClient({ user, preferences }: SettingsClientProps) {
               </Button>
             </div>
             
-            <div className="pt-4 border-t border-red-100">
-              <h4 className="text-sm font-medium text-red-700 mb-2">Delete Account</h4>
-              <p className="text-xs text-gray-500 mb-3">
+            <div className="pt-4 border-t border-red-500/20">
+              <h4 className="text-sm font-medium text-red-400 mb-2">Delete Account</h4>
+              <p className="text-xs text-zinc-500 mb-3">
                 Permanently delete your account and all associated data. This action cannot be undone.
               </p>
               <Button
-                variant="outline"
+                variant="ghost"
                 onClick={handleDeleteAccount}
                 disabled={isDeleting}
-                className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                className="text-red-400 hover:text-red-300 hover:bg-red-500/10 border-red-500/30"
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 {isDeleting ? "Deleting..." : "Delete Account"}

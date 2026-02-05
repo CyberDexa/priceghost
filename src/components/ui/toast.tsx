@@ -128,26 +128,30 @@ function ToastItem({ toast, onClose }: ToastItemProps) {
     info: Info,
   };
 
-  const colors: Record<ToastType, { bg: string; border: string; icon: string }> = {
+  const colors: Record<ToastType, { bg: string; border: string; icon: string; glow: string }> = {
     success: {
-      bg: 'bg-green-500/10',
-      border: 'border-green-500/30',
-      icon: 'text-green-400',
+      bg: 'bg-emerald-500/10',
+      border: 'border-emerald-500/20',
+      icon: 'text-emerald-400',
+      glow: 'shadow-emerald-500/10',
     },
     error: {
       bg: 'bg-red-500/10',
-      border: 'border-red-500/30',
+      border: 'border-red-500/20',
       icon: 'text-red-400',
+      glow: 'shadow-red-500/10',
     },
     warning: {
       bg: 'bg-amber-500/10',
-      border: 'border-amber-500/30',
+      border: 'border-amber-500/20',
       icon: 'text-amber-400',
+      glow: 'shadow-amber-500/10',
     },
     info: {
       bg: 'bg-blue-500/10',
-      border: 'border-blue-500/30',
+      border: 'border-blue-500/20',
       icon: 'text-blue-400',
+      glow: 'shadow-blue-500/10',
     },
   };
 
@@ -156,19 +160,27 @@ function ToastItem({ toast, onClose }: ToastItemProps) {
 
   return (
     <div
-      className={`pointer-events-auto ${color.bg} ${color.border} border rounded-lg p-4 shadow-lg backdrop-blur-sm animate-in slide-in-from-right duration-300`}
+      className={`
+        pointer-events-auto ${color.bg} ${color.border} 
+        border rounded-xl p-4 
+        backdrop-blur-xl bg-zinc-900/80
+        shadow-lg ${color.glow}
+        animate-slide-in-right
+      `}
     >
       <div className="flex items-start gap-3">
-        <Icon className={`w-5 h-5 flex-shrink-0 mt-0.5 ${color.icon}`} />
+        <div className={`p-1 rounded-lg ${color.bg}`}>
+          <Icon className={`w-5 h-5 flex-shrink-0 ${color.icon}`} />
+        </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-white">{toast.title}</p>
+          <p className="text-sm font-semibold text-zinc-100">{toast.title}</p>
           {toast.message && (
             <p className="text-sm text-zinc-400 mt-1">{toast.message}</p>
           )}
         </div>
         <button
           onClick={onClose}
-          className="flex-shrink-0 p-1 text-zinc-500 hover:text-zinc-300 transition-colors"
+          className="flex-shrink-0 p-1.5 text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 rounded-lg transition-colors cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>

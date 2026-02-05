@@ -202,15 +202,15 @@ export function DashboardClient({ products, stats, currency = "USD" }: Dashboard
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-500 mt-1">Track your products and never miss a deal</p>
+          <h1 className="text-3xl font-bold text-white tracking-tight">Dashboard</h1>
+          <p className="text-zinc-400 mt-1">Track your products and never miss a deal</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <Button variant="outline" onClick={handleExport}>
             <Download className="h-4 w-4 mr-2" />
             Export
           </Button>
-          <Button onClick={() => setShowAddModal(true)}>
+          <Button variant="glow" onClick={() => setShowAddModal(true)}>
             <Plus className="h-4 w-4 mr-2" />
             Track Product
           </Button>
@@ -230,8 +230,8 @@ export function DashboardClient({ products, stats, currency = "USD" }: Dashboard
 
       {/* Bulk Actions Bar */}
       {selectedProducts.size > 0 && (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="text-sm text-emerald-800">
+        <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fade-in-up">
+          <div className="text-sm text-emerald-400 font-medium">
             {selectedProducts.size} product{selectedProducts.size !== 1 ? "s" : ""} selected
           </div>
           <div className="flex flex-wrap gap-2">
@@ -241,7 +241,7 @@ export function DashboardClient({ products, stats, currency = "USD" }: Dashboard
               onClick={() => handleBulkAction("refresh")}
               disabled={bulkLoading}
             >
-              <RefreshCw className={`h-4 w-4 mr-1 ${bulkLoading ? "animate-spin" : ""}`} />
+              <RefreshCw className={`h-4 w-4 mr-1.5 ${bulkLoading ? "animate-spin" : ""}`} />
               Refresh Prices
             </Button>
             <Button
@@ -251,7 +251,8 @@ export function DashboardClient({ products, stats, currency = "USD" }: Dashboard
               disabled={bulkLoading}
               title="Re-scrape product details (name, image, retailer)"
             >
-              🔄 Fix Details
+              <RefreshCw className="h-4 w-4 mr-1.5" />
+              Fix Details
             </Button>
             <Button
               variant="outline"
@@ -266,9 +267,9 @@ export function DashboardClient({ products, stats, currency = "USD" }: Dashboard
               size="sm"
               onClick={() => handleBulkAction("delete")}
               disabled={bulkLoading}
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+              className="text-red-400 hover:text-red-300 hover:bg-red-500/10 border-red-500/30"
             >
-              <Trash2 className="h-4 w-4 mr-1" />
+              <Trash2 className="h-4 w-4 mr-1.5" />
               Delete
             </Button>
           </div>
@@ -278,7 +279,7 @@ export function DashboardClient({ products, stats, currency = "USD" }: Dashboard
       {/* Products */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Your Products</h2>
+          <h2 className="text-lg font-semibold text-white">Your Products</h2>
           {filteredProducts.length > 0 && (
             <Button variant="ghost" size="sm" onClick={selectAll}>
               {selectedProducts.size === filteredProducts.length ? "Deselect All" : "Select All"}
@@ -287,48 +288,48 @@ export function DashboardClient({ products, stats, currency = "USD" }: Dashboard
         </div>
 
         {products.length === 0 ? (
-          <Card>
+          <Card variant="glass">
             <CardContent className="p-12 text-center">
-              <div className="mx-auto h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-                <Ghost className="h-8 w-8 text-gray-400" />
+              <div className="mx-auto h-20 w-20 rounded-2xl bg-zinc-800/50 flex items-center justify-center mb-6">
+                <Ghost className="h-10 w-10 text-zinc-600" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-xl font-semibold text-white mb-2">
                 No products yet
               </h3>
-              <p className="text-gray-500 mb-6 max-w-sm mx-auto">
+              <p className="text-zinc-400 mb-8 max-w-sm mx-auto">
                 Start tracking products to get notified when prices drop. Just paste a URL and we&apos;ll do the rest!
               </p>
-              <Button onClick={() => setShowAddModal(true)}>
+              <Button variant="glow" onClick={() => setShowAddModal(true)}>
                 <Plus className="h-4 w-4 mr-2" />
                 Track Your First Product
               </Button>
             </CardContent>
           </Card>
         ) : filteredProducts.length === 0 ? (
-          <Card>
+          <Card variant="glass">
             <CardContent className="p-12 text-center">
-              <div className="mx-auto h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-                <Ghost className="h-8 w-8 text-gray-400" />
+              <div className="mx-auto h-20 w-20 rounded-2xl bg-zinc-800/50 flex items-center justify-center mb-6">
+                <Ghost className="h-10 w-10 text-zinc-600" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-xl font-semibold text-white mb-2">
                 No matching products
               </h3>
-              <p className="text-gray-500 mb-6 max-w-sm mx-auto">
+              <p className="text-zinc-400 mb-6 max-w-sm mx-auto">
                 Try adjusting your filters to see more products.
               </p>
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 stagger-children">
             {filteredProducts.map((product) => (
               <div key={product.id} className="relative">
                 {/* Selection checkbox */}
-                <div className="absolute top-4 left-4 z-10">
+                <div className="absolute top-5 left-5 z-10">
                   <input
                     type="checkbox"
                     checked={selectedProducts.has(product.id)}
                     onChange={() => toggleProductSelection(product.id)}
-                    className="h-5 w-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+                    className="h-5 w-5 rounded-md border-zinc-700 bg-zinc-800 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-zinc-900 cursor-pointer"
                   />
                 </div>
                 <ProductCard product={product} currency={currency} />

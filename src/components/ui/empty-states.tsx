@@ -51,7 +51,7 @@ export function EmptyState({
           action.href ? (
             <Link
               href={action.href}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-medium transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white rounded-lg font-medium transition-all duration-200"
             >
               <Plus className="w-4 h-4" />
               {action.label}
@@ -59,7 +59,7 @@ export function EmptyState({
           ) : (
             <button
               onClick={action.onClick}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-medium transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white rounded-lg font-medium transition-all duration-200 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               {action.label}
@@ -70,14 +70,14 @@ export function EmptyState({
           secondaryAction.href ? (
             <Link
               href={secondaryAction.href}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg font-medium transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-zinc-800/50 hover:bg-zinc-700/50 text-zinc-300 border border-zinc-700 rounded-lg font-medium transition-colors"
             >
               {secondaryAction.label}
             </Link>
           ) : (
             <button
               onClick={secondaryAction.onClick}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg font-medium transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-zinc-800/50 hover:bg-zinc-700/50 text-zinc-300 border border-zinc-700 rounded-lg font-medium transition-colors cursor-pointer"
             >
               {secondaryAction.label}
             </button>
