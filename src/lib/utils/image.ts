@@ -7,11 +7,16 @@ export function getValidImageUrl(url: string | null | undefined): string | null 
   
   // Handle protocol-relative URLs (starting with //)
   if (url.startsWith('//')) {
-    return `https:${url}`;
+    url = `https:${url}`;
   }
   
-  // Check if it's a valid http/https URL
-  if (url.startsWith('http://') || url.startsWith('https://')) {
+  // Convert http to https (next.config only allows https)
+  if (url.startsWith('http://')) {
+    url = url.replace('http://', 'https://');
+  }
+  
+  // Check if it's a valid https URL
+  if (url.startsWith('https://')) {
     // Filter out tracking/analytics URLs that aren't actual images
     const invalidPatterns = [
       '/batch/',
